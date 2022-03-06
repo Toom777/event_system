@@ -1,10 +1,12 @@
 package com.toom.event_system.Entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -13,9 +15,9 @@ import java.util.Date;
  */
 @Data
 @TableName(value = "user")
-public class User extends BaseEntity {
+public class User extends BaseEntity  {
     /** 用户ID */
-    @TableId(value = "user_id")
+    @TableId
     private Long userId;
 
     /** 社区ID */

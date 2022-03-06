@@ -35,6 +35,14 @@ public class CommunityController extends BaseController {
         return Result.success(communityService.selectCommunityAll());
     }
 
+    /**
+     * 获取所有社区名称
+     */
+    @GetMapping("/selectAllName")
+    public Result selectAllName(){
+        return Result.success(communityService.selectCommunityNameAll());
+    }
+
 
     /**
      * 通过id查社区
@@ -42,6 +50,16 @@ public class CommunityController extends BaseController {
     @RequestMapping("/selectById/{communityId}")
     public Result selectById(@PathVariable Long communityId) {
         return Result.success(communityService.selectCommunityById(communityId));
+    }
+
+    /**
+     * 通过名字查社区ID
+     * @param communityName
+     * @return
+     */
+    @GetMapping("/selectByName/{communityName}")
+    public Result selectByName(@PathVariable String communityName){
+        return Result.success(communityService.selectCommunityByName(communityName));
     }
 
 

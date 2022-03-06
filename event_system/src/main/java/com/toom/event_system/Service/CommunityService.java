@@ -22,6 +22,20 @@ public interface CommunityService extends IService<Community> {
      */
     public Community selectCommunityById(Long communityId);
 
+
+    /**
+     * 通过名字查社区ID
+     * @param communityName
+     * @return
+     */
+    public Long selectCommunityByName(String communityName);
+
+    /**
+     * 获取所有社区的名字
+     * @return
+     */
+    public List<String> selectCommunityNameAll();
+
     /**
      * 新增社区
      * @param community
@@ -45,5 +59,7 @@ public interface CommunityService extends IService<Community> {
      * @return
      */
     public Boolean deleteCommunityByIds(Long[]communityIds);
+
+
 }
 

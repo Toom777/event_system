@@ -29,8 +29,8 @@
 
             <!--性别-->
             <el-form-item label="性 别" prop="sex">
-              <el-radio v-model="registerForm.sex" label="1" >男</el-radio>
-              <el-radio v-model="registerForm.sex" label="2">女</el-radio>
+              <el-radio v-model="registerForm.sex" label="0">男</el-radio>
+              <el-radio v-model="registerForm.sex" label="1">女</el-radio>
             </el-form-item>
 
             <el-form-item label="手机号" prop="phone">
@@ -43,30 +43,37 @@
 
             <!--社区-->
             <el-form-item label="社 区" prop="community">
-              <el-select v-model="registerForm.community" clearable placeholder="">
+              <el-select
+                  v-model="registerForm.community"
+                  clearable
+                  placeholder=""
+                  :loading="loading"
+              >
                 <el-option
-                    v-for="item in communities"
+                    v-for="item in communityNameList"
                     :key="item.value"
                     :label="item.label"
-                    :value="item.value">
+                    :value="item.value">{{item.label}}
                 </el-option>
               </el-select>
             </el-form-item>
 
+            <!--邮箱-->
             <el-form-item label="邮 箱" prop="email">
               <el-input v-model="registerForm.email" clearable></el-input>
             </el-form-item>
 
-
-
+            <!--职业-->
             <el-form-item label="职 业" prop="career">
               <el-input v-model="registerForm.career" clearable></el-input>
             </el-form-item>
 
-            <el-form-item label="政治面貌" prop="political">
-              <el-input v-model="registerForm.political" clearable></el-input>
+            <!--政治面貌-->
+            <el-form-item label="政治面貌" prop="politicalStatus">
+              <el-input v-model="registerForm.politicalStatus" clearable></el-input>
             </el-form-item>
 
+            <!--出生日期-->
             <el-form-item label="出生日期" prop="birthday">
               <div class="block">
                 <span class="demonstration"></span>
@@ -124,10 +131,11 @@ export default {
       registerForm: {
         username: '',
         password: '',
+        communityId: '',
         community: '',
         name: '',
         sex: '',
-        political: '',
+        politicalStatus: '',
         email: '',
         phone: '',
         career: '',
@@ -135,20 +143,7 @@ export default {
       },
 
       /*动态社区选择*/
-      communities: [{
-        value: '选项1',
-        label: '九龙社区'
-      }, {
-        value: '选项2',
-        label: '龙城社区'
-      }, {
-        value: '选项3',
-        label: '长沙社区'
-      }, {
-        value: '选项4',
-        label: '海珠社区'
-      }]
-      ,
+      communityNameList: [],
 
       /*验证校验*/
       rules: {
@@ -177,16 +172,24 @@ export default {
   methods: {
     /*注册按钮*/
     handleRegister(forName){
-      this.$refs.registerForm.validate(valid => {
+      this.$refs[forName].validate(valid => {
         if (valid){
           this.loading = true;
-          console.log(this.registerForm)
-          axios.post('http://localhost:8888/register', this.registerForm).then((res) =>{
-            console.log(res)
-            if (res.status == 200){
-              this.$message("注册成功！")
-            }
+
+          /*社区数据转化*/
+          axios.get('http://localhost:8888/community/selectByName/' + this.registerForm.community).then((res) =>{
+            this.registerForm.communityId = parseInt(res.data.data)
+            console.log(typeof this.registerForm.communityId)
+          }).then((res) =>{
+            /*传入后台*/
+            axios.post('http://localhost:8888/user/insert', this.registerForm).then((res) =>{
+              console.log(res)
+              if (res.status == 200){
+                this.$message("注册成功！")
+              }
+            })
           })
+
         }else {
           console.log("error register!")
           return false;
@@ -196,7 +199,30 @@ export default {
     /*重置*/
     reload(forName){
       this.$refs[forName].resetFields();
+    },
+
+    /*搜索数据库中社区名称并注入*/
+    searchList(){
+      axios('http://localhost:8888/community/selectAllName').then((res) =>{
+        /*判断是否有数据*/
+        if (res.data.data != null){
+          /*将后台传的数据遍历到communityNameList*/
+          for (var x = 0; x < res.data.data.length; x++){
+            let obj = {}
+            //value 同 label一样 为了后续方便查id
+            obj.value = res.data.data[x]
+            obj.label = res.data.data[x]
+            this.communityNameList.push(obj)
+          }
+        }else {
+          console.log("获取数据失败！")
+        }
+      })
     }
+
+  },
+  created() {
+    this.searchList()
   }
 }
 </script>

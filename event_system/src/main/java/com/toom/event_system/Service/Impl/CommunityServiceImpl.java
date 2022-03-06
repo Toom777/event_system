@@ -38,6 +38,32 @@ public class CommunityServiceImpl extends ServiceImpl<CommunityMapper, Community
     }
 
     /**
+     *  通过名字查找社区ID
+     */
+    @Override
+    public Long selectCommunityByName(String communityName) {
+        QueryWrapper<Community> wrapper = new QueryWrapper<>();
+        //查询community_name字段为communityName的数据
+        wrapper.eq("community_name", communityName);
+        return communityMapper.selectOne(wrapper).getCommunityId();
+    }
+
+    /**
+     *  获取所有社区名字
+     * @return
+     */
+    @Override
+    public List<String> selectCommunityNameAll() {
+        QueryWrapper<Community> wrapper = new QueryWrapper<>();
+        wrapper.select("community_name");
+        List<String> communityNameList = new ArrayList<>();
+        for ( Community name: communityMapper.selectList(wrapper)) {
+            communityNameList.add(name.getCommunityName());
+        }
+        return communityNameList;
+    }
+
+    /**
      * 新增社区
      * @param community
      * @return

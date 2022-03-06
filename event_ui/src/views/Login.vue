@@ -21,12 +21,19 @@
       </el-form-item>
 
       <!--验证码-->
-<!--      <el-form-item label="活动名称" prop="name">
-        <el-input v-model="input" placeholder="请输入内容"></el-input>
+      <el-form-item prop="code" >
+        <el-input
+            v-model="loginForm.code"
+            placeholder="验证码"
+            style="width: 63%"
+            @keyup.enter.native="submitForm"
+        >
+        </el-input>
         <div class="login-code">
-          <el-image></el-image>
+          <img :src="codeUrl" @click="getCode" class="login-code-img"/>
         </div>
-      </el-form-item>-->
+      </el-form-item>
+
 
       <!--登录按钮-->
       <el-form-item style="width:100%;">
@@ -59,6 +66,8 @@ export default {
       loginForm: {
         username: '',
         password: '',
+        code: '',
+        uuid: ''
       },
       /*验证校验*/
       rules: {
@@ -67,28 +76,45 @@ export default {
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-        ]
+        ],
+        code: [{ required: true, trigger: "change", message: "请输入验证码" }]
+
       },
-      loading: false
+      loading: false,
+      codeUrl: ''
     };
   },
   methods: {
+    getCode() {
+      axios.get("http://localhost:8888/captchaImage").then((res) => {
+        console.log(res)
+        this.codeUrl = "data:image/jpg;base64," + res.data.img;
+        this.loginForm.uuid = res.data.uuid;
+      });
+    },
+
     submitForm() {
-      this.loading = true;
-      /*跳转到首页*/
-      this.$router.push("/index")
+      /*表单验证*/
+      this.$refs.loginForm.validate(valid => {
+        if (valid)
+        this.loading = true;
+
+        /*跳转到首页*/
+        this.$router.push("/index")
+      });
     },
     register(){
       this.$router.push("/register")
     }
+  },
+  created() {
+    this.getCode();
   }
 }
 </script>
 
 <style scoped>
-#app{
-  background-color: #42b983;
-}
+
 .login{
   display: flex;
   justify-content: center;
@@ -120,5 +146,14 @@ export default {
   font-family: Arial;
   font-size: 12px;
   letter-spacing: 1px;
+}
+.login-code {
+  width: 33%;
+  height: 38px;
+  float: right;
+}
+
+.login-code .login-code-img {
+  height: 38px;
 }
 </style>
