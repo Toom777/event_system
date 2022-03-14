@@ -2,6 +2,7 @@ package com.toom.event_system.Controller;
 
 
 import com.toom.event_system.Common.Result;
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 
@@ -11,6 +12,7 @@ import java.util.Date;
 /**
  *  Web通用数据处理
  */
+@Api(value = "BaseController", tags = {"Result统一操作接口"})
 public class BaseController {
     /**
      * 将前台传递过来的日期格式的字符串，自动转化为Date类型

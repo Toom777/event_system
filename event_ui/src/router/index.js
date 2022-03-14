@@ -20,6 +20,7 @@ const routes = [
     name: 'Register',
     component: () => import('../views/Register')
   },
+
   {
     /*布局页*/
     path: '/index',
@@ -27,40 +28,70 @@ const routes = [
     component: () => import('../views/home/LayoutIndex'),
     redirect: 'home',
     children: [
+        /*主页面*/
       {
         path: '/home',
         name: 'Home',
-        component:() => import('../views/home/index/home')
+        component:() => import('../views/home/index/home'),
+        children: [
+          {
+            /*首页内容*/
+            path: '/main',
+            name: 'main',
+            component: () => import('../views/home/index/main')
+          }
+        ]
       },
+      /*用户*/
       {
         path: '/user',
         name: 'User',
         component:() => import('../views/home/user/user')
       },
+        /*社区*/
       {
         path: '/community',
         name: 'Community',
         component:() => import('../views/home/community/Community')
       },
+        /*活动*/
       {
         path: '/activity',
         name: 'Activity,',
         component:() => import('../views/home/activity/index'),
         children: [
           {
-            path: '/pageone',
-            name: 'Pageone',
-            component:() => import('../views/home/activity/PageOne')
+            path: '/release',
+            name: 'Release',
+            component:() => import('../views/home/activity/release')
           },
           {
-            path: '/pagetwo',
-            name: 'Pagetwo',
-            component:() => import('../views/home/activity/PageTwo')
+            path: '/list',
+            name: 'List',
+            component:() => import('../views/home/activity/list')
+          }
+        ]
+      },
+        /*内容*/
+      {
+        path: '/contents',
+        name: 'Contents,',
+        component:() => import('../views/home/contents/index'),
+        children: [
+          {
+            path: '/carousel',
+            name: 'Carousel',
+            component:() => import('../views/home/contents/carousel')
           },
           {
-            path: '/pagethree',
-            name: 'Pagethree',
-            component:() => import('../views/home/activity/PageThree')
+            path: '/news',
+            name: 'News',
+            component:() => import('../views/home/contents/news')
+          },
+          {
+            path: '/notice',
+            name: 'Notice',
+            component:() => import('../views/home/contents/notice')
           }
         ]
       }
@@ -68,6 +99,12 @@ const routes = [
     ]
   }
 ]
+
+/*解决路由重复报错*/
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 
 const router = new VueRouter({
   mode: 'history',

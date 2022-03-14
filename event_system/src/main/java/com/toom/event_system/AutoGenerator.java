@@ -33,7 +33,7 @@ public class AutoGenerator {
         FastAutoGenerator.create(url, username, password)
                 .globalConfig(builder -> {
                     builder.author("Toom")               //作者
-                            .outputDir("D://Computer/Java_code/JavaWeb/")   // 指定输出目录
+                            .outputDir("D://Computer/Java_code/JavaWeb/Auto/")   // 指定输出目录
                             .enableSwagger()           //开启swagger
                             .commentDate("yyyy-MM-dd")
                             .fileOverride();            //开启覆盖之前生成的文件
@@ -48,7 +48,7 @@ public class AutoGenerator {
                             .controller("controller")
                             .mapper("mapper")
                             .xml("mapper")
-                            .pathInfo(Collections.singletonMap(OutputFile.mapperXml, "D://Computer/Java_code/JavaWeb/"));// 设置mapperXml生成路径
+                            .pathInfo(Collections.singletonMap(OutputFile.mapperXml, "D://Computer/Java_code/JavaWeb/Auto/"));// 设置mapperXml生成路径
                 })
                 .strategyConfig(builder -> {
                     builder.addInclude(tables)       // 设置需要生成的表名

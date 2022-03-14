@@ -42,4 +42,10 @@ public interface UserService extends IService<User> {
      */
     public Boolean deleteUserByIds(Long[]userIds);
 
+    /**
+     * 查找账号
+     * @param username
+     * @return
+     */
+    public User getUserByUsername(String username);
 }

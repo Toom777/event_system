@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="login">
-    <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="100px" class="login-form">
+    <el-form :model="loginForm" :rules="rules" ref="loginForm" @keyup.enter.native="submitForm" label-width="100px" class="login-form">
       <h3 class="title">社区公益活动管理系统</h3>
       <!--账号-->
       <el-form-item prop="username">
@@ -37,7 +37,7 @@
 
       <!--登录按钮-->
       <el-form-item style="width:100%;">
-        <el-button type="primary" @click="submitForm()" :loading="loading">
+        <el-button type="primary" @click="submitForm()"  :loading="loading">
           <span v-if="!loading">登 录</span>
           <span v-else>登 录 中...</span>
         </el-button>
@@ -86,7 +86,7 @@ export default {
   },
   methods: {
     getCode() {
-      axios.get("http://localhost:8888/captchaImage").then((res) => {
+      this.axios.get("/captchaImage").then((res) => {
         console.log(res)
         this.codeUrl = "data:image/jpg;base64," + res.data.img;
         this.loginForm.uuid = res.data.uuid;
@@ -96,19 +96,39 @@ export default {
     submitForm() {
       /*表单验证*/
       this.$refs.loginForm.validate(valid => {
-        if (valid)
-        this.loading = true;
+        if (valid){
+          this.loading = true;
+          this.axios.post("/login", this.loginForm).then(res => {
+            /*将登录表单提交到store*/
+            this.$store.commit("SET_TOKEN", res.data.data.token)
+            this.$store.commit("SET_USERINFO", res.data.data.user)
+            /*跳转到首页*/
+            this.$router.push("/index")
+            this.$message({
+              showClose: true,
+              message: this.$store.getters.getUser.name + ' 登录成功',
+              type: 'success'
+            });
+          })
+        }else {
+          /*校验失败后的操作*/
 
-        /*跳转到首页*/
-        this.$router.push("/index")
+        }
+
+
+
       });
     },
     register(){
       this.$router.push("/register")
+    },
+    clear(){
+      this.$store.commit("REMOVE_INFO")
     }
   },
   created() {
-    this.getCode();
+    this.clear()
+    this.getCode()
   }
 }
 </script>
@@ -120,6 +140,7 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100%;
+  background-color: #42b983;
 }
 .title{
   margin: 0px auto 30px auto;
@@ -127,7 +148,10 @@ export default {
   color: #707070;
 }
 .login-form {
-  border-radius: 6px;
+  border-radius: 15px;
+  background-clip: padding-box;
+  margin: 180px auto;
+  box-shadow: 0 0 30px #707070;
   background: #ffffff;
   width: 400px;
   padding: 25px 25px 5px 25px;

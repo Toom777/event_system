@@ -177,12 +177,12 @@ export default {
           this.loading = true;
 
           /*社区数据转化*/
-          axios.get('http://localhost:8888/community/selectByName/' + this.registerForm.community).then((res) =>{
+          this.axios.get('/community/selectByName/' + this.registerForm.community).then((res) =>{
             this.registerForm.communityId = parseInt(res.data.data)
             console.log(typeof this.registerForm.communityId)
           }).then((res) =>{
             /*传入后台*/
-            axios.post('http://localhost:8888/user/insert', this.registerForm).then((res) =>{
+            this.axios.post('/user/insert', this.registerForm).then((res) =>{
               console.log(res)
               if (res.status == 200){
                 this.$message("注册成功！")
@@ -203,7 +203,7 @@ export default {
 
     /*搜索数据库中社区名称并注入*/
     searchList(){
-      axios('http://localhost:8888/community/selectAllName').then((res) =>{
+      this.axios('/community/selectAllName').then((res) =>{
         /*判断是否有数据*/
         if (res.data.data != null){
           /*将后台传的数据遍历到communityNameList*/

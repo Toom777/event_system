@@ -1,56 +1,48 @@
 <template>
-<div id="app">
-  <el-container>
-    <NavMenu></NavMenu>
+  <el-container style="height: 100%;">
+    <!--左侧菜单栏-->
+    <el-aside width="180px">
+      <nav-menu></nav-menu>
+    </el-aside>
+
     <el-container>
-      <el-header>Header</el-header>
-      <el-main><router-view></router-view></el-main>
+      <!--顶部-->
+      <el-header>
+        <Header></Header>
+      </el-header>
+      <!--主要页面-->
+      <el-main>
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
-</div>
 </template>
 
 <script>
-import NavMenu from "@/views/home/NavMenu";
+import NavMenu from "@/components/NavMenu";
+import Header from "@/components/Header";
 export default {
   name: "index",
-  components: {NavMenu}
+  components: {Header, NavMenu},
 }
 </script>
 
-<style scoped>
-
-.el-header, .el-footer {
-  background-color: #B3C0D1;
+<style>
+.el-header{
+  background-color: #545c64;
   color: #333;
-  text-align: center;
-  line-height: 60px;
 }
 
 .el-aside {
-  background-color: #D3DCE6;
+  background-color: #545c64;
   color: #333;
   text-align: center;
-  line-height: 200px;
 }
 
 .el-main {
   background-color: #E9EEF3;
   color: #333;
   text-align: center;
-  line-height: 160px;
 }
 
-body > .el-container {
-  margin-bottom: 40px;
-}
-
-.el-container:nth-child(5) .el-aside,
-.el-container:nth-child(6) .el-aside {
-  line-height: 260px;
-}
-
-.el-container:nth-child(7) .el-aside {
-  line-height: 320px;
-}
 </style>

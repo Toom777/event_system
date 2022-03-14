@@ -1,5 +1,6 @@
 package com.toom.event_system.Service.Impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.toom.event_system.Entity.User;
 import com.toom.event_system.Mapper.UserMapper;
@@ -80,5 +81,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             list.add(id);
         }
         return userMapper.deleteBatchIds(list) > 0 ? true : false;
+    }
+
+    /**
+     * 查找账号
+     * @param username
+     * @return
+     */
+    @Override
+    public User getUserByUsername(String username) {
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq("username", username);
+        User user = userMapper.selectOne(wrapper);
+        return user;
     }
 }
