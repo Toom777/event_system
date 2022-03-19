@@ -89,9 +89,9 @@
     <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="用户ID" align="center" prop="userId" />
+      <el-table-column label="姓名" align="center" prop="name" />
       <el-table-column label="所在社区" align="center" prop="communityId" :formatter="communityIdFormatter"/>
       <el-table-column label="用户账号" align="center" prop="username" />
-      <el-table-column label="姓名" align="center" prop="name" />
       <el-table-column label="用户类型" align="center" prop="userType" :formatter="userTypeFormatter"/>
       <el-table-column label="邮箱" align="center" prop="email" />
       <el-table-column label="手机号码" align="center" prop="phone" />
@@ -106,8 +106,11 @@
       <el-table-column label="积分" align="center" prop="points" />
       <el-table-column label="星级" align="center" prop="sating" />
       <el-table-column label="服务时长" align="center" prop="hours" />
-      <!--TODO 设置一个按钮-->
-      <el-table-column label="帐号状态" align="center" prop="status" />
+      <el-table-column label="状态" align="center" prop="status" >
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.status == '0' ? 'success': 'danger'">{{scope.row.status == '0' ? '正常' : '禁用'}}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="最后登录IP" align="center" prop="loginIp" />
       <el-table-column label="最后登录时间" align="center" prop="loginDate" width="180">
         <template slot-scope="scope">
@@ -145,61 +148,88 @@
 
 
     <!-- 添加或修改用户 弹出层 -->
+    <!--TODO 密码送个默认的-->
     <el-dialog :title="title" :visible.sync="dialogOpen" width="500px" append-to-body>
-      <!--TODO 社区名称-->
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-<!--        <el-form-item label="社区ID" prop="communityId">
-          <el-input v-model="form.communityId" placeholder="请输入社区ID" />
-        </el-form-item>-->
-        <el-form-item label="用户账号" prop="username">
-          <el-input v-model="form.username" placeholder="请输入用户账号" />
-        </el-form-item>
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="form.name" placeholder="请输入真实姓名" />
-        </el-form-item>
-        <el-form-item label="用户邮箱" prop="email">
-          <el-input v-model="form.email" placeholder="请输入用户邮箱" />
-        </el-form-item>
-        <el-form-item label="手机号码" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入手机号码" />
-        </el-form-item>
-        <el-form-item label="职业" prop="career">
-          <el-input v-model="form.career" placeholder="请输入职业" />
-        </el-form-item>
-        <el-form-item label="出生日期" prop="birthday">
-          <el-date-picker clearable size="small"
-                          v-model="form.birthday"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="选择出生日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="积分" prop="points">
-          <el-input v-model="form.points" placeholder="请输入积分" />
-        </el-form-item>
-        <el-form-item label="星级" prop="sating">
-          <el-input v-model="form.sating" placeholder="请输入星级" />
-        </el-form-item>
-<!--        <el-form-item label="服务时长" prop="hours">
-          <el-input v-model="form.hours" placeholder="请输入服务时长" />
-        </el-form-item>
-        <el-form-item label="删除标志" prop="delFlag">
-          <el-input v-model="form.delFlag" placeholder="请输入删除标志" />
-        </el-form-item>
-        <el-form-item label="最后登录IP" prop="loginIp">
-          <el-input v-model="form.loginIp" placeholder="请输入最后登录IP" />
-        </el-form-item>
-        <el-form-item label="最后登录时间" prop="loginDate">
-          <el-date-picker clearable size="small"
-                          v-model="form.loginDate"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="选择最后登录时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
-        </el-form-item>-->
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px" @keyup.enter.native="handleQuery">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="账号" prop="username">
+              <el-input v-model="form.username" placeholder="请输入账号" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="归属社区" prop="communityId">
+              <el-select
+                  v-model="form.communityId"
+                  clearable
+                  placeholder="选择社区"
+                  :loading="loading"
+              >
+                <el-option
+                    v-for="item in communityList"
+                    :key="item.communityId"
+                    :label="item.communityName"
+                    :value="item.communityId"
+                >
+                  {{item.communityName}}
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="姓名" prop="name">
+              <el-input v-model="form.name" placeholder="请输入姓名" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="性别" prop="sex">
+              <el-radio-group v-model="form.sex" @change="radioChange">
+                <el-radio label="0">男</el-radio>
+                <el-radio label="1">女</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="手机号码" prop="phone">
+              <el-input v-model="form.phone" placeholder="请输入手机号码" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="邮箱" prop="email">
+              <el-input v-model="form.email" placeholder="请输入用户邮箱" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="出生日期" prop="birthday">
+              <el-date-picker clearable size="small"
+                              v-model="form.birthday"
+                              type="date"
+                              value-format="yyyy-MM-dd"
+                              placeholder="选择出生日期"
+                              style="width: 100%;">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="状态" prop="status">
+              <el-tooltip :content="'Switch value: ' + form.status" placement="top">
+                <el-switch
+                    v-model="form.status"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949"
+                    active-value="0"
+                    inactive-value="1">
+                </el-switch>
+              </el-tooltip>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -256,9 +286,14 @@ export default {
         loginIp: '',
         loginDate: null,*/
       },
+      /*用户状态*/
+      statusMap: [
+        { label: '正常', value: 0, tagName: 'success'},
+        { label: '禁用', value: 1, tagName: 'danger'}
+      ],
       /*社区列表*/
       communityList: {
-        communityId: null,
+        communityId: '',
         communityName: ''
       },
       // 表单参数
@@ -269,8 +304,11 @@ export default {
           { required: true, message: "用户账号不能为空", trigger: "blur" }
         ],
         name: [
-          { required: true, message: "真实姓名不能为空", trigger: "blur" }
+          { required: true, message: "姓名不能为空", trigger: "blur" }
         ],
+        sex: [
+          { required: true}
+        ]
       }
     };
   },
@@ -279,6 +317,10 @@ export default {
     this.getCommunityList();
   },
   methods: {
+    /*监听我的radio*/
+    radioChange(row){
+      console.log(row)
+    },
     /*性别格式转换*/
     sexFormatter(row){
       const sex = row.sex
@@ -360,7 +402,7 @@ export default {
         email: undefined,
         phone: undefined,
         sex: undefined,
-        politicalStatus: "0",
+        politicalStatus: "",
         career: undefined,
         birthday: undefined,
         points: undefined,
@@ -425,13 +467,19 @@ export default {
         if (valid) {
           if (this.form.userId != null) {
             updateUser(this.form).then(res => {
-              this.$modal.msgSuccess("修改成功");
+              this.$message({
+                message: '修改成功',
+                type: 'success'
+              });
               this.dialogOpen = false;
               this.getList();
             });
           } else {
             addUser(this.form).then(res => {
-              this.$modal.msgSuccess("新增成功");
+              this.$message({
+                message: '创建成功',
+                type: 'success'
+              });
               this.dialogOpen = false;
               this.getList();
             });
@@ -442,11 +490,18 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const userIds = row.userId || this.ids;
-      this.$modal.confirm('是否确认删除用户编号为"' + userIds + '"的数据项？').then(function() {
+      this.$confirm('是否删除该用户?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(function() {
         return delUser(userIds);
       }).then(() => {
         this.getList();
-        this.$modal.msgSuccess("删除成功");
+        this.$message({
+          message: '删除成功',
+          type: 'success'
+        });
       }).catch(() => {});
     },
     /** 导出按钮操作 */

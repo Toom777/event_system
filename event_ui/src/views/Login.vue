@@ -126,6 +126,8 @@ export default {
     },
     clear(){
       this.$store.commit("REMOVE_INFO")
+      /*将本地存储的菜单栏active值调为home*/
+      localStorage.setItem("active", "home")
     }
   },
   created() {

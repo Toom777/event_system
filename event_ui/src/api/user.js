@@ -38,7 +38,7 @@ export function getUser(userId) {
 // 新增用户
 export function addUser(data) {
   return axios({
-    url: '/system/user',
+    url: '/user/insert',
     method: 'post',
     data: data
   })
