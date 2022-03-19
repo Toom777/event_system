@@ -50,4 +50,6 @@ public interface MenuMapper  extends BaseMapper<Menu> {
             "WHERE parent_id = #{parent_id} and m.menu_type = 'C' and m.`status` = 0\n" +
             "ORDER BY m.menu_id, order_num")
     List<Menu> selectSubPermissionByFatherId(Long parentId);
+
+
 }

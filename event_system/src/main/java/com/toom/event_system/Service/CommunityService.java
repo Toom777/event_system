@@ -6,6 +6,7 @@ import com.toom.event_system.Entity.Community;
 
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Toom
@@ -36,6 +37,13 @@ public interface CommunityService extends IService<Community> {
      */
     public List<String> selectCommunityNameAll();
 
+
+    /**
+     * 获取所有社区id和名称
+     * @return
+     */
+    public List<Map<String, Object>> selectCommunityIdAndNameAll();
+
     /**
      * 新增社区
      * @param community
@@ -59,6 +67,7 @@ public interface CommunityService extends IService<Community> {
      * @return
      */
     public Boolean deleteCommunityByIds(Long[]communityIds);
+
 
 
 }

@@ -3,7 +3,7 @@ package com.toom.event_system.Shiro;
 import com.alibaba.fastjson.JSON;
 
 import com.toom.event_system.Common.JwtToken;
-import com.toom.event_system.Common.JwtUtils;
+import com.toom.event_system.Common.Utils.JwtUtils;
 import com.toom.event_system.Common.Result;
 import io.jsonwebtoken.Claims;
 import org.apache.shiro.authc.AuthenticationException;

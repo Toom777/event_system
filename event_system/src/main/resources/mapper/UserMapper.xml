@@ -31,4 +31,8 @@
         <result column="remark" property="remark" />
     </resultMap>
 
+    <select id="selectUserVo" resultType="com.toom.event_system.Entity.User">
+        select user_id, community_id, username, name from user where community_id = #{communityId}
+    </select>
+
 </mapper>

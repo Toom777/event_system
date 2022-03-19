@@ -10,7 +10,7 @@ axios.interceptors.request.use(config => {
 }, function (error) {
     console.log('error!');
     return Promise.reject(error);
-})
+});
 
 //响应拦截
 axios.interceptors.response.use(response => {
@@ -26,5 +26,9 @@ axios.interceptors.response.use(response => {
             Message.error(res.message, {duration: 3 * 1000})
             return Promise.reject(res.message)
         }
-    },
-)
+    },(error => {
+        return Promise.reject(error);
+    })
+);
+
+export default axios;

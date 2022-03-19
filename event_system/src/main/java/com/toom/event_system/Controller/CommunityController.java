@@ -43,6 +43,12 @@ public class CommunityController extends BaseController {
         return Result.success(communityService.selectCommunityNameAll());
     }
 
+    /**
+     * 获取所有社区名称+ID （plus版）
+     */
+    @GetMapping("/selectIdAndName")
+    public Result selectAllIdAndName() { return Result.success(communityService.selectCommunityIdAndNameAll());}
+
 
     /**
      * 通过id查社区

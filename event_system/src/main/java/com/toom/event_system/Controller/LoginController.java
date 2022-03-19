@@ -2,6 +2,7 @@ package com.toom.event_system.Controller;
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.toom.event_system.Common.*;
+import com.toom.event_system.Common.Utils.JwtUtils;
 import com.toom.event_system.Entity.User;
 import com.toom.event_system.Service.MenuService;
 import com.toom.event_system.Service.RoleService;
@@ -11,7 +12,6 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +38,7 @@ public class LoginController {
 
     @Autowired
     private RoleService roleService;
+
     /**
      * 登录
      */
@@ -47,7 +48,6 @@ public class LoginController {
         if (user.getPassword() == null || user.getUsername() == null){
             return Result.error(500, "用户名和密码错误");
         }
-
         Subject subject = SecurityUtils.getSubject();
         String jwt = JwtUtils.createJWT(user.getUsername(), "back", "user", 1000*60*30);
         JwtToken jwtToken = new JwtToken(jwt, user.getPassword());

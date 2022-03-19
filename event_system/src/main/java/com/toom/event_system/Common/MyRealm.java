@@ -1,7 +1,7 @@
 package com.toom.event_system.Common;
 
 
-import com.toom.event_system.Entity.Role;
+import com.toom.event_system.Common.Utils.JwtUtils;
 import com.toom.event_system.Entity.User;
 import com.toom.event_system.Service.MenuService;
 import com.toom.event_system.Service.RoleService;

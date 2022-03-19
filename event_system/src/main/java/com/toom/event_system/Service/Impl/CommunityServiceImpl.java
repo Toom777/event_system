@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 社区管理方法
@@ -59,6 +61,24 @@ public class CommunityServiceImpl extends ServiceImpl<CommunityMapper, Community
         List<String> communityNameList = new ArrayList<>();
         for ( Community name: communityMapper.selectList(wrapper)) {
             communityNameList.add(name.getCommunityName());
+        }
+        return communityNameList;
+    }
+
+    /**
+     * 获取所有社区id和名称
+     * @return
+     */
+    @Override
+    public List<Map<String, Object>> selectCommunityIdAndNameAll() {
+        QueryWrapper<Community> wrapper = new QueryWrapper<>();
+        wrapper.select("community_id", "community_name");
+        List<Map<String, Object>> communityNameList = new ArrayList<>();
+        for ( Community name: communityMapper.selectList(wrapper)) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("communityName", name.getCommunityName());
+            map.put("communityId", name.getCommunityId());
+            communityNameList.add(map);
         }
         return communityNameList;
     }

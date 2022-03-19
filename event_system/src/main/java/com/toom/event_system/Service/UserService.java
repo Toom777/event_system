@@ -1,6 +1,9 @@
 package com.toom.event_system.Service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.toom.event_system.Entity.PageInfo;
 import com.toom.event_system.Entity.User;
 import com.toom.event_system.Entity.User;
 
@@ -12,6 +15,17 @@ public interface UserService extends IService<User> {
      * 获取所有用户
      */
     public List<User> selectUserAll();
+
+
+    /**
+     * 分页查询
+     */
+    public Page<User> selectUserPage(Page<User> page);
+
+    /**
+     * 条件分页查询
+     */
+    public Page<User> searchUserPage(Page<User> page, QueryWrapper<User> wrapper);
 
     /**
      *  通过ID查找用户

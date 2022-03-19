@@ -26,7 +26,6 @@
             v-model="loginForm.code"
             placeholder="验证码"
             style="width: 63%"
-            @keyup.enter.native="submitForm"
         >
         </el-input>
         <div class="login-code">
@@ -85,11 +84,12 @@ export default {
     };
   },
   methods: {
+    /*获取验证码*/
     getCode() {
       this.axios.get("/captchaImage").then((res) => {
-        console.log(res)
         this.codeUrl = "data:image/jpg;base64," + res.data.img;
         this.loginForm.uuid = res.data.uuid;
+        console.log(res)
       });
     },
 
@@ -99,10 +99,12 @@ export default {
         if (valid){
           this.loading = true;
           this.axios.post("/login", this.loginForm).then(res => {
+            console.log(this.loginForm)
             /*将登录表单提交到store*/
             this.$store.commit("SET_TOKEN", res.data.data.token)
             this.$store.commit("SET_USERINFO", res.data.data.user)
             /*跳转到首页*/
+            //TODO push操作改一下
             this.$router.push("/index")
             this.$message({
               showClose: true,

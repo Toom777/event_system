@@ -14,37 +14,13 @@ import java.util.Date;
  */
 @Api(value = "BaseController", tags = {"Result统一操作接口"})
 public class BaseController {
-    /**
-     * 将前台传递过来的日期格式的字符串，自动转化为Date类型
-     */
-/*    @InitBinder
-    public void initBinder(WebDataBinder binder)
-    {
-        // Date 类型转换
-        binder.registerCustomEditor(Date.class, new PropertyEditorSupport()
-        {
-            @Override
-            public void setAsText(String text)
-            {
-                setValue(DateUtils.parseDate(text));
-            }
-        });
-    }*/
 
     /**
-     * 返回成功
+     * 返回成功消息
      */
     public Result success()
     {
         return Result.success();
-    }
-
-    /**
-     * 返回失败消息
-     */
-    public Result error()
-    {
-        return Result.error();
     }
 
     /**
@@ -53,6 +29,15 @@ public class BaseController {
     public Result success(String message)
     {
         return Result.success(message);
+    }
+
+
+    /**
+     * 返回失败消息
+     */
+    public Result error()
+    {
+        return Result.error();
     }
 
     /**

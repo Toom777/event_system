@@ -2,11 +2,7 @@
   <div>
     <h4 style="height: 50px;">右侧首页内容</h4>
     <!--轮播图效果-->
-    <el-carousel :interval="4000" type="card" height="200px">
-      <el-carousel-item v-for="item in 3" :key="item">
-        <h3 class="medium">{{ item }}</h3>
-      </el-carousel-item>
-    </el-carousel>
+
   </div>
 </template>
 

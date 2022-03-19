@@ -3,24 +3,21 @@ package com.toom.event_system.Controller;
 
 import cn.hutool.core.io.FastByteArrayOutputStream;
 import com.toom.event_system.Common.Base64;
-import com.toom.event_system.Common.RedisUtils;
+import com.toom.event_system.Common.Utils.RedisUtils;
 import com.toom.event_system.Common.Result;
+import com.toom.event_system.Common.Utils.StringUtil;
 import com.toom.event_system.Entity.CaptchaEntity;
 import com.toom.event_system.Service.CaptchaService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 
@@ -37,6 +34,10 @@ public class CaptchaController {
     @Resource
     protected HttpServletResponse resp;
 
+    /**
+     * 生成验证码
+     * @return
+     */
     @GetMapping("/captchaImage")
     public Result getCaptchaData() {
 
@@ -47,9 +48,9 @@ public class CaptchaController {
         if (captchaEntity != null) {
 
             // 写入唯一Token
-            captchaEntity.setToken(UUID.randomUUID().toString());
+            captchaEntity.setToken(StringUtil.generateUUID());
             // 将验证码保存至redis
-            redisUtils.set(captchaEntity.getToken(), captchaEntity.getCode(), 2, TimeUnit.MINUTES);
+            redisUtils.set("captchaCode:" + captchaEntity.getToken(), captchaEntity.getCode(), 2, TimeUnit.MINUTES);
             FastByteArrayOutputStream os = new FastByteArrayOutputStream();
             try{
                 ImageIO.write(captchaEntity.getImage(), "jpg", os);

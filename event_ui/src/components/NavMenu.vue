@@ -1,14 +1,13 @@
 <template>
     <el-menu
-        default-active="1"
+        :default-active="MenuActive"
         class="el-menu-vertical-demo"
         background-color="#545c64"
         text-color="#fff"
         active-text-color="#ffd04b"
-        :default-active="MenuActive"
         router
     >
-      <el-menu-item index="/home" @click="saveActive(subItem.path)">
+      <el-menu-item index="home" @click="saveActive('home')">
         <i class="el-icon-menu"></i>
         <span slot="title">首页</span>
       </el-menu-item>
@@ -18,10 +17,10 @@
           :index="item.menu.path"
           v-for="item in menuList"
           :key="item.menu.menuId"
-          v-if="item.subMenu == '' "
-          @click="saveActive(subItem.path)"
+          v-if="item.subMenu == ''"
+          @click="saveActive(item.menu.path)"
       >
-        <i class="el-icon-menu"></i>
+        <i :class="item.menu.icon"></i>
         <span slot="title">{{item.menu.menuName}}</span>
       </el-menu-item>
 
@@ -33,7 +32,7 @@
           v-if="item.subMenu != ''"
       >
         <template slot="title">
-          <i class="el-icon-location"></i>
+          <i :class="item.menu.icon"></i>
           <span>{{item.menu.menuName}}</span>
         </template>
         <el-menu-item
@@ -42,7 +41,8 @@
             :key="subItem.menuId"
             @click="saveActive(subItem.path)"
         >
-          {{subItem.menuName}}
+          <i :class="subItem.icon"></i>
+          <span slot="title">{{subItem.menuName}}</span>
         </el-menu-item>
       </el-submenu>
     </el-menu>

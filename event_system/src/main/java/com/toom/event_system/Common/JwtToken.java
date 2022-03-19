@@ -1,5 +1,6 @@
 package com.toom.event_system.Common;
 
+import com.toom.event_system.Common.Utils.JwtUtils;
 import lombok.Data;
 import org.apache.shiro.authc.HostAuthenticationToken;
 import org.apache.shiro.authc.RememberMeAuthenticationToken;

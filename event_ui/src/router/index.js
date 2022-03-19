@@ -26,7 +26,7 @@ const routes = [
     path: '/index',
     name: 'Index',
     component: () => import('../views/home/LayoutIndex'),
-    redirect: 'home',
+    redirect: '/home',
     children: [
         /*主页面*/
       {
@@ -94,6 +94,12 @@ const routes = [
             component:() => import('../views/home/contents/notice')
           }
         ]
+      },
+        /*留言*/
+      {
+        path: '/message',
+        name: 'Message',
+        component:() => import('../views/home/message/index')
       }
 
     ]

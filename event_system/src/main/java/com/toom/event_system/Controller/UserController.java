@@ -1,7 +1,11 @@
 package com.toom.event_system.Controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.toom.event_system.Common.Result;
+import com.toom.event_system.Entity.PageInfo;
 import com.toom.event_system.Entity.User;
 import com.toom.event_system.Service.UserService;
 import io.swagger.annotations.Api;
@@ -46,6 +50,59 @@ public class UserController extends BaseController{
         return Result.success(userService.selectUserAll());
     }
 
+    /**
+     * 获取用户列表（实施分页）
+     */
+    @GetMapping("/list")
+    public PageInfo getUserList(@RequestBody @RequestParam("pageCurrent") Integer pageCurrent,
+                            @RequestBody @RequestParam("pageSize") Integer pageSize){
+        Page<User> page = new Page<>(pageCurrent, pageSize);
+        userService.selectUserPage(page);
+
+        PageInfo userInfo = new PageInfo();
+        userInfo.setPageCurrent(pageCurrent);
+        userInfo.setPageSize(pageSize);
+        userInfo.setTotal(page.getTotal());
+        userInfo.setRows(page.getRecords());
+
+        return userInfo;
+    }
+
+    /**
+     * 条件分页查询
+     * @param pageCurrent
+     * @param pageSize
+     * @param communityId
+     * @param username
+     * @param name
+     * @return
+     */
+    @GetMapping("/searchList")
+    public PageInfo getSearchList(@RequestParam("pageCurrent") Integer pageCurrent,
+                                  @RequestParam("pageSize") Integer pageSize,
+                                  @RequestParam("communityId") Long communityId,
+                                  @RequestParam("username") String username,
+                                  @RequestParam("name") String name){
+        Page<User> page = new Page<>(pageCurrent, pageSize);
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        if (!"".equals(username)){
+            wrapper.like("username", username);
+        }
+        if (!"".equals(name)){
+            wrapper.like("name", name);
+        }
+        if (communityId != null){
+            wrapper.eq("community_id", communityId);
+        }
+        userService.searchUserPage(page, wrapper);
+        PageInfo info = new PageInfo();
+        info.setPageCurrent(pageCurrent);
+        info.setPageSize(pageSize);
+        info.setTotal(page.getTotal());
+        info.setRows(page.getRecords());
+        return info;
+    }
+
 
     /**
      * 通过id查用户
@@ -79,7 +136,7 @@ public class UserController extends BaseController{
     /**
      * 删除用户
      */
-    @DeleteMapping("/del/{userIds}")
+        @DeleteMapping("/del/{userIds}")
     public Result removeUser(@PathVariable Long[] userIds){
         return toAjax(userService.deleteUserByIds(userIds));
     }

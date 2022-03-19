@@ -1,6 +1,7 @@
 package com.toom.event_system.Service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.toom.event_system.Entity.User;
 import com.toom.event_system.Mapper.UserMapper;
@@ -27,6 +28,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public List<User> selectUserAll() {
         return userMapper.selectList(null);
+    }
+
+    /**
+     * 分页查询
+     */
+    @Override
+    public Page<User> selectUserPage(Page<User> page) {
+        return userMapper.selectPage(page, null);
+    }
+
+    /**
+     * 条件分页查询
+     * @param page
+     * @param wrapper
+     * @return
+     */
+    @Override
+    public Page<User> searchUserPage(Page<User> page, QueryWrapper<User> wrapper) {
+        return userMapper.selectPage(page, wrapper);
     }
 
     /**

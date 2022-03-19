@@ -1,5 +1,5 @@
 <template>
-<h3>PAGE ONE</h3>
+<h3>发布活动</h3>
 </template>
 
 <script>

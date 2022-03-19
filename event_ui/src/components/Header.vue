@@ -10,8 +10,8 @@
           <el-button class="user" type="primary">
           </el-button>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>多喝水</el-dropdown-item>
-            <el-dropdown-item>要开心</el-dropdown-item>
+            <el-dropdown-item>个人信息</el-dropdown-item>
+            <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -27,8 +27,29 @@ export default {
     }
   },
   methods: {
+    /*获取用户名*/
     getUserName() {
       this.name = this.$store.getters.getUser.name
+    },
+    /*退出登录*/
+    logout(){
+      this.$confirm('确认退出?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '退出成功!'
+        });
+        this.$store.commit("REMOVE_INFO");
+        this.$router.replace("/login");
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消退出'
+        });
+      });
     }
   },
   created() {
@@ -38,14 +59,6 @@ export default {
 </script>
 
 <style scoped>
-/*.hello{
-  position: relative;
-  top:50%;
-  transform:translateY(-50%);
-  left:50%;
-  transform:translateX(-50%);
-  width: 90%;
-}*/
 
 header{
   display: flex;

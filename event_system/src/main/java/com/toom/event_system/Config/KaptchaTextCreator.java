@@ -1,7 +1,7 @@
 package com.toom.event_system.Config;
 
 import com.google.code.kaptcha.text.impl.DefaultTextCreator;
-import com.toom.event_system.Common.KaptchaUtil;
+import com.toom.event_system.Common.Utils.KaptchaUtil;
 
 import java.security.SecureRandom;
 import java.util.Map;
