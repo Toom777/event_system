@@ -129,6 +129,12 @@
           <el-button
               size="mini"
               type="text"
+              icon="el-icon-refresh"
+              @click="handleReloadPassword(scope.row)"
+          >还原</el-button>
+          <el-button
+              size="mini"
+              type="text"
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
           >删除</el-button>
@@ -147,7 +153,7 @@
     </el-pagination>
 
 
-    <!-- 添加或修改用户 弹出层 -->
+    <!-- 添加用户 弹出层 -->
     <!--TODO 密码送个默认的-->
     <el-dialog :title="title" :visible.sync="dialogOpen" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px" @keyup.enter.native="handleQuery">
@@ -236,6 +242,145 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+
+    <!--修改用户弹出层-->
+    <el-dialog :title="title" :visible.sync="updateOpen" width="500px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px" @keyup.enter.native="handleQuery">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="账号" prop="username">
+              <el-input v-model="form.username" placeholder="请输入账号" :disabled="true"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="归属社区" prop="communityId">
+              <el-select
+                  v-model="form.communityId"
+                  clearable
+                  placeholder="选择社区"
+                  :loading="loading"
+              >
+                <el-option
+                    v-for="item in communityList"
+                    :key="item.communityId"
+                    :label="item.communityName"
+                    :value="item.communityId"
+                >
+                  {{item.communityName}}
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="姓名" prop="name">
+              <el-input v-model="form.name" placeholder="请输入姓名" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="性别" prop="sex">
+              <el-radio-group v-model="form.sex" @change="radioChange">
+                <el-radio label="0">男</el-radio>
+                <el-radio label="1">女</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="手机号码" prop="phone">
+              <el-input v-model="form.phone" placeholder="请输入手机号码" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="邮箱" prop="email">
+              <el-input v-model="form.email" placeholder="请输入用户邮箱" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="出生日期" prop="birthday">
+              <el-date-picker clearable size="small"
+                              v-model="form.birthday"
+                              type="date"
+                              value-format="yyyy-MM-dd"
+                              placeholder="选择出生日期"
+                              style="width: 100%;">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="用户类型" prop="userType">
+              <el-select v-model="form.userType">
+                <el-option
+                    v-for="item in userTypeList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="政治面貌" prop="politicalStatus">
+              <el-input v-model="form.politicalStatus" placeholder="请输入政治面貌" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="职业" prop="career">
+              <el-input v-model="form.career" placeholder="请输入职业" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="积分" prop="points">
+              <el-input-number v-model="form.points" :min="0" size="medium" style="width: 100%;"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="星级" prop="sating">
+              <el-input v-model="form.sating" placeholder="" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="服务时长" prop="hours">
+              <el-input-number v-model="form.hours" :min="0" size="medium" style="width: 100%;"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="状态" prop="status">
+              <el-tooltip :content="'Switch value: ' + form.status" placement="top">
+                <el-switch
+                    v-model="form.status"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949"
+                    active-value="0"
+                    inactive-value="1">
+                </el-switch>
+              </el-tooltip>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -264,6 +409,7 @@ export default {
       title: "",
       // 是否显示弹出层
       dialogOpen: false,
+      updateOpen: false,
       // 查询参数
       queryParams: {
         pageCurrent: 1,
@@ -286,10 +432,10 @@ export default {
         loginIp: '',
         loginDate: null,*/
       },
-      /*用户状态*/
-      statusMap: [
-        { label: '正常', value: 0, tagName: 'success'},
-        { label: '禁用', value: 1, tagName: 'danger'}
+      /*用户类型列表 此处直接写死了*/
+      userTypeList: [
+        { label: '普通用户', value: '03'},
+        { label: '社区管理员', value: '02'}
       ],
       /*社区列表*/
       communityList: {
@@ -387,6 +533,7 @@ export default {
     },
     // 取消按钮
     cancel() {
+      this.updateOpen = false;
       this.dialogOpen = false;
       this.reset();
     },
@@ -435,9 +582,11 @@ export default {
     },
     /** 重置按钮操作 */
     resetForm(formName) {
-      this.$nextTick(() => {
-        this.$refs[formName].resetFields();
-      })
+      if (this.$refs[formName]){
+        this.$nextTick(() => {
+          this.$refs[formName].resetFields();
+        })
+      }
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
@@ -456,10 +605,29 @@ export default {
       this.reset();
       const userId = row.userId || this.ids
       getUser(userId).then(res => {
-        this.form = res.data;
-        this.dialogOpen = true;
+        this.form = res.data.data;
+        this.updateOpen = true;
         this.title = "修改用户";
       });
+    },
+    /*重置密码*/
+    handleReloadPassword(row) {
+      this.reset();
+      const userId = row.userId || this.ids
+      getUser(userId).then(res => {
+        this.form = res.data.data;
+        this.form.password = "123456"
+        if (this.form.userId != null) {
+          updateUser(this.form).then(res => {
+            this.$message({
+              message: '密码重置成功！新密码为：123456',
+              type: 'success'
+            });
+            this.getList();
+          });
+        }
+      });
+
     },
     /** 提交按钮 */
     submitForm() {
@@ -471,13 +639,14 @@ export default {
                 message: '修改成功',
                 type: 'success'
               });
-              this.dialogOpen = false;
+              this.updateOpen = false;
               this.getList();
             });
           } else {
+            this.form.password = "123456";
             addUser(this.form).then(res => {
               this.$message({
-                message: '创建成功',
+                message: '用户创建成功，默认密码：123456',
                 type: 'success'
               });
               this.dialogOpen = false;
