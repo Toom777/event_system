@@ -7,8 +7,15 @@ import com.toom.event_system.Entity.CaptchaEntity;
  */
 public interface CaptchaService {
     /**
-     * Kaptcha生成验证码服务层接口
+     * Kaptcha生成验证码
      * @return
      */
     public CaptchaEntity createCaptcha();
+
+    /**
+     * 验证码校验
+     * @param code
+     * @param uuid
+     */
+    public int validateCaptcha(String code, String uuid);
 }

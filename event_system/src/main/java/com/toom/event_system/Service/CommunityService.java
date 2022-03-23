@@ -1,6 +1,8 @@
 package com.toom.event_system.Service;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.toom.event_system.Entity.Community;
 
@@ -68,7 +70,12 @@ public interface CommunityService extends IService<Community> {
      */
     public Boolean deleteCommunityByIds(Long[]communityIds);
 
-
-
+    /**
+     * 分页查询
+     * @param page
+     * @param wrapper
+     * @return
+     */
+    Page<Community> searchCommunityPage(Page<Community> page, QueryWrapper<Community> wrapper);
 }
 

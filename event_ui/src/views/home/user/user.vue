@@ -154,7 +154,6 @@
 
 
     <!-- 添加用户 弹出层 -->
-    <!--TODO 密码送个默认的-->
     <el-dialog :title="title" :visible.sync="dialogOpen" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px" @keyup.enter.native="handleQuery">
         <el-row>
@@ -682,3 +681,10 @@ export default {
   }
 };
 </script>
+
+<style>
+.app-container {
+  padding: 20px;
+}
+
+</style>

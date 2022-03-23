@@ -324,4 +324,12 @@ public class RedisUtils {
         Set<ZSetOperations.TypedTuple<Object>> ret = zset.reverseRangeWithScores(key, start, end);
         return ret;
     }
+
+    /**
+     * 删除缓存对象
+     * @param verifyKey
+     */
+    public boolean delete(final String verifyKey) {
+        return redisTemplate.delete(verifyKey);
+    }
 }

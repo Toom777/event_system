@@ -20,6 +20,7 @@ import java.io.PrintWriter;
 
 /**
  * 自定义的过滤器
+ * @author Toom
  */
 public class JwtFilter extends AuthenticatingFilter {
     @Override

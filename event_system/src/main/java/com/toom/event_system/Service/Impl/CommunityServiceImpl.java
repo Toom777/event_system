@@ -1,6 +1,7 @@
 package com.toom.event_system.Service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.toom.event_system.Entity.Community;
 import com.toom.event_system.Mapper.CommunityMapper;
@@ -124,5 +125,16 @@ public class CommunityServiceImpl extends ServiceImpl<CommunityMapper, Community
             list.add(id);
         }
         return communityMapper.deleteBatchIds(list) > 0 ? true : false;
+    }
+
+    /**
+     * 分页查询
+     * @param page
+     * @param wrapper
+     * @return
+     */
+    @Override
+    public Page<Community> searchCommunityPage(Page<Community> page, QueryWrapper<Community> wrapper) {
+        return communityMapper.selectPage(page, wrapper);
     }
 }

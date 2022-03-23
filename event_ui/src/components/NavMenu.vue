@@ -7,6 +7,7 @@
         active-text-color="#ffd04b"
         router
     >
+      <h4 style="color: white;">社区公益活动管理系统</h4>
       <el-menu-item index="home" @click="saveActive('home')">
         <i class="el-icon-menu"></i>
         <span slot="title">首页</span>
@@ -64,7 +65,7 @@ export default {
   methods: {
     /*获取菜单列表*/
     getMenuList() {
-      var username = "";
+      let username = "";
       /*判断store中是否有用户*/
       if (this.$store.getters.getUser == "" || this.$store.getters.getUser == null){
         username = "";
@@ -76,6 +77,7 @@ export default {
           "Authorization": this.$store.getters.getToken
         }
       }).then((res) => {
+        console.log(res);
         const menuList = res.data.data;
         this.menuList = menuList;
       })

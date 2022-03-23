@@ -3,10 +3,9 @@ package com.toom.event_system.Controller;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.toom.event_system.Common.*;
 import com.toom.event_system.Common.Utils.JwtUtils;
+import com.toom.event_system.Entity.LoginBody;
 import com.toom.event_system.Entity.User;
-import com.toom.event_system.Service.MenuService;
-import com.toom.event_system.Service.RoleService;
-import com.toom.event_system.Service.UserService;
+import com.toom.event_system.Service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
@@ -39,11 +38,47 @@ public class LoginController {
     @Autowired
     private RoleService roleService;
 
+    @Autowired
+    private LoginService loginService;
+
+    @Autowired
+    private CaptchaService captchaService;
+
     /**
-     * 登录
+     * 登录校验
+     * @return
      */
     @PostMapping("/login")
-    @ApiOperation("登录")
+    @ApiOperation("登录校验")
+    public Result loginVerification(@RequestBody LoginBody loginBody){
+
+        //校验验证码
+        int captchaResult = captchaService.validateCaptcha(loginBody.getCode(), loginBody.getUuid());
+        if (captchaResult == 1002){
+            return Result.error(401, "验证码过期！");
+        }
+        if (captchaResult == 1003){
+            return Result.error(401, "验证码错误！");
+        }
+
+        if (loginBody.getPassword() == null || loginBody.getUsername() == null){
+            return Result.error(500, "用户名和密码错误");
+        }
+        Map<String, Object> loginResult = loginService.login(loginBody.getUsername(), loginBody.getPassword());
+        System.out.println(loginResult);
+        if (loginResult.get("401") == "UnknownAccountException"){
+            return Result.error(401, "账号不存在！");
+        }
+        if (loginResult.get("401") == "IncorrectCredentialsException"){
+            return Result.error(401, "密码错误！");
+        }
+
+        return Result.success("登录成功", loginResult);
+    }
+
+    /**
+     * 登录 1.0
+     */
     public Result login(@RequestBody User user){
         if (user.getPassword() == null || user.getUsername() == null){
             return Result.error(500, "用户名和密码错误");
@@ -66,6 +101,12 @@ public class LoginController {
         return Result.success("登录成功！", map);
     }
 
+
+    /**
+     * 获取用户信息
+     * 已经与登录校验合并啦
+     * @return
+     */
     @GetMapping("/getInfo")
     public Result getInfo(){
         User user = (User) SecurityUtils.getSubject().getPrincipal();
@@ -80,10 +121,6 @@ public class LoginController {
 
     /**
      * 获取用户菜单
-     * @return
-     */
-
-    /**
      * TODO 后续转为在SecurityUtils中获取用户信息
      */
     @GetMapping("/getRouters")

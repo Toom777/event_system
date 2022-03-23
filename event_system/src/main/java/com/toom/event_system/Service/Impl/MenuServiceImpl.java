@@ -39,7 +39,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         List<Map<String, Object>> menus = new ArrayList<>();
         List<Menu> list = null;
         //若用户权限为ADMIN则返回全部菜单列表
-        if (username.equals("admin")){
+        if ("admin".equals(username)){
             QueryWrapper wrapper = new QueryWrapper();
             Map<String, Object> map = new HashMap<>();
             map.put("status", 0);

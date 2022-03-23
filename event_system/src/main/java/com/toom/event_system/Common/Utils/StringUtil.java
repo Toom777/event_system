@@ -34,4 +34,15 @@ public class StringUtil {
             return null;
         }
     }
+
+
+    /**
+     * 判断对象是否为空
+     * @param object
+     * @return
+     */
+    public static boolean isNull(Object object)
+    {
+        return object == null;
+    }
 }

@@ -34,7 +34,7 @@ public class MyRealm extends AuthorizingRealm {
 
 
     /**
-     * 使用自定义Token，判断是否用的JwtToken类
+     * 标识MyRealm专门用来验证JwtToken，判断是否用的JwtToken类
      * @param token
      * @return
      */
@@ -45,38 +45,45 @@ public class MyRealm extends AuthorizingRealm {
 
 
     /**
-     * 授权验证，获取授权信息
-     * @param principalCollection
+     * 授权验证，获取授权信息(角色和权限)
+     * @param principals
      * @return
      */
     @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        String username = (String)principalCollection.iterator().next();
-        Set<String> roleNames = roleService.getRoleByUsername(username);
-        Set<String> permissions = menuService.getPermissionByUsername(username);
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+
+        /*String username = (String) principals.getPrimaryPrincipal();*/
+
+        // 获取SimpleAuthenticationInfo(username, user.getPassword(), getName()) 的参数
+        String username = (String)principals.iterator().next();
+
         // 返回权限
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        info.setRoles(roleNames);
-        info.setStringPermissions(permissions);
+        info.setRoles(roleService.getRoleByUsername(username));
+        info.setStringPermissions(menuService.getPermissionByUsername(username));
         return info;
     }
 
     /**
-     * 登录验证，获取身份信息
+     * 登录认证，获取身份信息
      * @param token
      * @return
      * @throws AuthenticationException
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+
+
         JwtToken jwtToken = (JwtToken)token;
         String jwt = (String) jwtToken.getPrincipal();
         Claims claims = JwtUtils.parseJWT(jwt);
-        //获取username
+
+        //获取用户名
         String username = claims.getId();
         User user = userService.getUserByUsername(username);
         if (user == null){
-            return null;
+            //未找到账号
+            throw new UnknownAccountException();
         }
         return new SimpleAuthenticationInfo(username, user.getPassword(), getName());
     }

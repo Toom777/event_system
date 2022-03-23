@@ -6,6 +6,10 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
+/**
+ * Redis配置类
+ * @author Toom
+ */
 @Configuration
 public class RedisConfig {
     @Bean
@@ -22,6 +26,7 @@ public class RedisConfig {
         // 设置hash的value的序列化方式
         template.setHashValueSerializer(RedisSerializer.json());
         template.afterPropertiesSet();
+        
         return template;
     }
 }

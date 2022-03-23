@@ -4,6 +4,7 @@ import com.toom.event_system.Common.MyRealm;
 import com.toom.event_system.Shiro.JwtFilter;
 import com.toom.event_system.Shiro.MyCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.mgt.SubjectFactory;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -17,6 +18,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * Shiro配置类
+ * 主要包括 ShiroFilterFactoryBean、DefaultWebSecurityManager、Realm
  * @author Toom
  */
 @Configuration

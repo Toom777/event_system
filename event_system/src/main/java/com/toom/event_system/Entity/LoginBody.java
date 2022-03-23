@@ -5,6 +5,7 @@ import lombok.Data;
 
 /**
  * 用户登录对象
+ * @author Toom
  */
 @Data
 public class LoginBody {

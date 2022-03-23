@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 自定义的jwt Token 用于授权和验证
+ * 代替shiro原生的UsernamePasswordToken
  * @author Toom
  */
 @Data

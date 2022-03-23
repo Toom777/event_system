@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 密码验证器
+ * @author Toom
  */
 @Component
 public class MyCredentialsMatcher extends SimpleCredentialsMatcher {

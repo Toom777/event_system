@@ -1,0 +1,37 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "929424",
+      "name": "group",
+      "font_class": "group",
+      "unicode": "e71c",
+      "unicode_decimal": 59164
+    },
+    {
+      "icon_id": "1117006",
+      "name": "clock",
+      "font_class": "clock",
+      "unicode": "e626",
+      "unicode_decimal": 58918
+    },
+    {
+      "icon_id": "1261160",
+      "name": "bars",
+      "font_class": "bars",
+      "unicode": "e63c",
+      "unicode_decimal": 58940
+    },
+    {
+      "icon_id": "27363909",
+      "name": "sitemap",
+      "font_class": "sitemap",
+      "unicode": "eb94",
+      "unicode_decimal": 60308
+    }
+  ]
+}

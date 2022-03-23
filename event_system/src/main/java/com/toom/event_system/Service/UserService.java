@@ -44,6 +44,7 @@ public interface UserService extends IService<User> {
      */
     public Boolean updateUser(User user);
 
+
     /**
      * 删除用户
      */

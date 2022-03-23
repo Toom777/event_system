@@ -1,9 +1,13 @@
 package com.toom.event_system.Controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.toom.event_system.Common.Result;
 import com.toom.event_system.Entity.Community;
 
 
+import com.toom.event_system.Entity.PageInfo;
+import com.toom.event_system.Entity.User;
 import com.toom.event_system.Service.CommunityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +37,32 @@ public class CommunityController extends BaseController {
     @GetMapping("/selectAll")
     public Result selectAll(){
         return Result.success(communityService.selectCommunityAll());
+    }
+
+
+    /**
+     * 分页条件查询社区列表
+     * @param pageCurrent
+     * @param pageSize
+     * @param communityName
+     * @return
+     */
+    @GetMapping("/searchList")
+    public PageInfo getSearchList(@RequestParam("pageCurrent") Integer pageCurrent,
+                                  @RequestParam("pageSize") Integer pageSize,
+                                  @RequestParam("communityName") String communityName){
+        Page<Community> page = new Page<>(pageCurrent, pageSize);
+        QueryWrapper<Community> wrapper = new QueryWrapper<>();
+        if (!"".equals(communityName)){
+            wrapper.like("community_name", communityName);
+        }
+        communityService.searchCommunityPage(page, wrapper);
+        PageInfo info = new PageInfo();
+        info.setPageCurrent(pageCurrent);
+        info.setPageSize(pageSize);
+        info.setTotal(page.getTotal());
+        info.setRows(page.getRecords());
+        return info;
     }
 
     /**
@@ -90,7 +120,7 @@ public class CommunityController extends BaseController {
     }
 
     /**
-     * 删除社区
+     * 删除社区  TODO 将该社区下所有用户的社区ID清空
      */
     @DeleteMapping("/del/{communityIds}")
     public Result removeCommunity(@PathVariable Long[] communityIds){

@@ -1,19 +1,25 @@
 <template>
-  <div class="home">
-      1
-  </div>
+  <el-container class="home">
+    <el-header>
+      <common-tag/>
+    </el-header>
+    <el-main>
+      <main-content/>
+    </el-main>
+  </el-container>
 </template>
 
 <script>
 import HomeHeader from "@/components/HomeHeader";
+import CommonTag from "@/components/CommonTag";
+import MainContent from "./MainContent"
+
 export default {
   name: "home",
-  components: {HomeHeader},
+  components: {CommonTag, HomeHeader, MainContent},
   data() {
     return {
-      backgroundDiv: {
-        backgroundImage : 'url(' + require('/src/assets/images/bg.jpg') + ')'
-      }
+
     }
   }
 }
@@ -23,8 +29,8 @@ export default {
 .home{
   background-color: #707070;
 }
-.banner{
+.el-header{
   background-color: #42b983;
-  height: 100%;
 }
+
 </style>

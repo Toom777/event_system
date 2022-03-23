@@ -33,14 +33,14 @@ const routes = [
         path: '/home',
         name: 'Home',
         component:() => import('../views/home/index/home'),
-        children: [
+/*        children: [
           {
-            /*首页内容*/
+            /!*首页内容*!/
             path: '/main',
             name: 'main',
             component: () => import('../views/home/index/main')
           }
-        ]
+        ]*/
       },
       /*用户*/
       {

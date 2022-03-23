@@ -49,6 +49,7 @@ public class CaptchaController {
 
             // 写入唯一Token
             captchaEntity.setToken(StringUtil.generateUUID());
+
             // 将验证码保存至redis
             redisUtils.set("captchaCode:" + captchaEntity.getToken(), captchaEntity.getCode(), 2, TimeUnit.MINUTES);
             FastByteArrayOutputStream os = new FastByteArrayOutputStream();
