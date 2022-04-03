@@ -120,7 +120,7 @@ public class CommunityController extends BaseController {
     }
 
     /**
-     * 删除社区  TODO 将该社区下所有用户的社区ID清空
+     * 删除社区
      */
     @DeleteMapping("/del/{communityIds}")
     public Result removeCommunity(@PathVariable Long[] communityIds){

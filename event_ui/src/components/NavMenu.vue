@@ -6,6 +6,7 @@
         text-color="#fff"
         active-text-color="#ffd04b"
         router
+        :collapse="isCollapse"
     >
       <h4 style="color: white;">社区公益活动管理系统</h4>
       <el-menu-item index="home" @click="saveActive('home')">
@@ -54,8 +55,7 @@ export default {
   name: "NavMenu",
   data () {
     return{
-        /*菜单是否收起*/
-        isCollapse: false,
+
         /*菜单列表*/
         menuList: [],
         /*当前浏览的模块*/
@@ -85,10 +85,16 @@ export default {
     saveActive(val) {
       localStorage.setItem("active", val);
       this.MenuActive = val;
+      this.$store.dispatch("selectMenu", val);
     }
   },
   created() {
     this.getMenuList()
+  },
+  computed: {
+    isCollapse() {
+      return this.$store.state.tab.isCollapse;
+    }
   }
 
 }
@@ -97,6 +103,7 @@ export default {
 <style>
 /*消除侧边导航栏子菜单突出*/
 .el-menu{
-  border-right: 0;
+  border: none;
+  border-right-width: 0;
 }
 </style>

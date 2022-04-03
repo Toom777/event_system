@@ -1,22 +1,17 @@
 <template>
-  <el-container class="home">
-    <el-header>
-      <common-tag/>
-    </el-header>
-    <el-main>
-      <main-content/>
-    </el-main>
-  </el-container>
+  <div class="app-container">
+    <router-view/>
+  </div>
+
 </template>
 
 <script>
-import HomeHeader from "@/components/HomeHeader";
 import CommonTag from "@/components/CommonTag";
 import MainContent from "./MainContent"
-
+import Tags from "@/components/Tags";
 export default {
   name: "home",
-  components: {CommonTag, HomeHeader, MainContent},
+  components: {CommonTag, MainContent, Tags},
   data() {
     return {
 
@@ -26,11 +21,9 @@ export default {
 </script>
 
 <style scoped>
-.home{
-  background-color: #707070;
-}
-.el-header{
-  background-color: #42b983;
+.app-container{
+  padding: 20px;
+
 }
 
 </style>

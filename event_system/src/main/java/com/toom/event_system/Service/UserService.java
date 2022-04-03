@@ -63,4 +63,16 @@ public interface UserService extends IService<User> {
      * @return
      */
     public User getUserByUsername(String username);
+
+
+    /**
+     * 统计用户数量
+     * @return
+     */
+    public Long countUser();
+
+    /**
+     * 统计服务时长
+     */
+    public Long countHours();
 }

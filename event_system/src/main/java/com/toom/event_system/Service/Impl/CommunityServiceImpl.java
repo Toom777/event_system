@@ -1,18 +1,19 @@
 package com.toom.event_system.Service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.toom.event_system.Entity.Community;
+import com.toom.event_system.Entity.User;
 import com.toom.event_system.Mapper.CommunityMapper;
 import com.toom.event_system.Service.CommunityService;
+import com.toom.event_system.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.jws.soap.SOAPBinding;
+import java.util.*;
 
 /**
  * 社区管理方法
@@ -23,6 +24,9 @@ public class CommunityServiceImpl extends ServiceImpl<CommunityMapper, Community
 
     @Autowired
     private CommunityMapper communityMapper;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * 获取所有社区
@@ -100,8 +104,8 @@ public class CommunityServiceImpl extends ServiceImpl<CommunityMapper, Community
      */
     @Override
     public Boolean updateCommunity(Community community) {
-        int row = communityMapper.updateById(community);
-        return row > 0 ? true : false;
+        community.setUpdateTime(new Date());
+        return communityMapper.updateById(community) > 0 ? true : false;
     }
 
     /**
@@ -109,8 +113,7 @@ public class CommunityServiceImpl extends ServiceImpl<CommunityMapper, Community
      */
     @Override
     public Boolean deleteCommunityById(Long communityId) {
-        int row = communityMapper.deleteById(communityId);
-        return row > 0 ? true : false;
+        return communityMapper.deleteById(communityId) > 0 ? true : false;
     }
 
     /**
@@ -123,6 +126,10 @@ public class CommunityServiceImpl extends ServiceImpl<CommunityMapper, Community
         List<Long> list = new ArrayList<>();
         for (long id : communityIds) {
             list.add(id);
+            //将该社区下所有用户communityId置为null
+            UpdateWrapper<User> wrapper = new UpdateWrapper<>();
+            wrapper.eq("community_id", id).set("community_id", null);
+            userService.update(null, wrapper);
         }
         return communityMapper.deleteBatchIds(list) > 0 ? true : false;
     }

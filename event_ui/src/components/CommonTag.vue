@@ -36,6 +36,9 @@ export default {
     ...mapState({
       tags: state => state.tab.tabsList
     })
+  },
+  created() {
+
   }
 }
 </script>

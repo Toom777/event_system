@@ -9,6 +9,7 @@ import org.apache.shiro.SecurityUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.util.ClassUtils;
 
 import java.util.Set;
 
@@ -39,5 +40,12 @@ class EventSystemApplicationTests {
 		result.put("roles", roles);
 		result.put("permissions", permissions);
 		System.out.println(result);
+	}
+
+	@Test
+	void uploadTest() {
+
+		System.out.println(ClassUtils.getDefaultClassLoader().getResource("static").getPath());
+		System.out.println(ClassUtils.getDefaultClassLoader().getResource("").getPath());
 	}
 }

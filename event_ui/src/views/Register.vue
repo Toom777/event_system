@@ -157,7 +157,12 @@ export default {
           { required: true, message: '请输入真实姓名', trigger: 'blur' }
         ],
         phone: [
-          { required: true, message: '请输入手机号', trigger: 'blur' }
+          { required: true, message: '请输入手机号', trigger: 'blur' },
+          { min: 11, max: 11, message: '请输入11位手机号码', trigger: 'blur' },
+          {
+            pattern: /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/,
+            message: '请输入正确的手机号码'
+          }
         ],
         sex: [
           { required: true }
@@ -185,8 +190,12 @@ export default {
             this.axios.post('/user/insert', this.registerForm).then((res) =>{
               console.log(res)
               if (res.status == 200){
-                this.$message("注册成功！")
+                this.$message("注册成功！");
+                this.$router.push("/login");
               }
+            }).catch(() => {
+              this.$message("账号已经存在！");
+              this.loading = false;
             })
           })
 

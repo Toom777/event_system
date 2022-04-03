@@ -88,11 +88,11 @@
 
     <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="用户ID" align="center" prop="userId" />
+      <el-table-column label="用户ID" width="70" align="center" prop="userId" />
       <el-table-column label="姓名" align="center" prop="name" />
       <el-table-column label="所在社区" align="center" prop="communityId" :formatter="communityIdFormatter"/>
       <el-table-column label="用户账号" align="center" prop="username" />
-      <el-table-column label="用户类型" align="center" prop="userType" :formatter="userTypeFormatter"/>
+      <el-table-column label="用户类型" width="90" align="center" prop="userType" :formatter="userTypeFormatter"/>
       <el-table-column label="邮箱" align="center" prop="email" />
       <el-table-column label="手机号码" align="center" prop="phone" />
       <el-table-column label="性别" align="center" prop="sex" :formatter="sexFormatter"/>
@@ -111,7 +111,6 @@
           <el-tag :type="scope.row.status == '0' ? 'success': 'danger'">{{scope.row.status == '0' ? '正常' : '禁用'}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="最后登录IP" align="center" prop="loginIp" />
       <el-table-column label="最后登录时间" align="center" prop="loginDate" width="180">
         <template slot-scope="scope">
           <span>{{ scope.row.loginDate }}</span>
@@ -155,7 +154,7 @@
 
     <!-- 添加用户 弹出层 -->
     <el-dialog :title="title" :visible.sync="dialogOpen" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px" @keyup.enter.native="handleQuery">
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px" @keyup.enter.native="submitForm">
         <el-row>
           <el-col :span="12">
             <el-form-item label="账号" prop="username">
@@ -245,7 +244,7 @@
 
     <!--修改用户弹出层-->
     <el-dialog :title="title" :visible.sync="updateOpen" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px" @keyup.enter.native="handleQuery">
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px" @keyup.enter.native="submitForm">
         <el-row>
           <el-col :span="12">
             <el-form-item label="账号" prop="username">

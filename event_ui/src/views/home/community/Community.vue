@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px" @submit.native.prevent>
       <el-form-item label="社区名称" prop="communityName">
         <el-input
             v-model="queryParams.communityName"
@@ -97,7 +97,7 @@
 
     <!-- 添加或修改社区 弹出框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px" @keyup.enter.native="submitForm">
         <el-row>
           <el-col :span="12">
             <el-form-item label="社区名称" prop="communityName">
@@ -272,7 +272,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const communityIds = row.communityId || this.ids;
-      this.$confirm('是否删除' + row.communityName + '？', '提示', {
+      this.$confirm('是否删除选中社区？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -288,10 +288,17 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/community/export', {
+      this.download('/community/export', {
         ...this.queryParams
       }, `community_${new Date().getTime()}.xlsx`)
     }
   }
 };
 </script>
+
+<style>
+.app-container {
+  padding: 20px;
+}
+
+</style>

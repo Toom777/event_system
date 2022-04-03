@@ -12,6 +12,9 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * 用户管理控制层
@@ -136,8 +139,10 @@ public class UserController extends BaseController{
     /**
      * 删除用户
      */
-        @DeleteMapping("/del/{userIds}")
+    @DeleteMapping("/del/{userIds}")
     public Result removeUser(@PathVariable Long[] userIds){
         return toAjax(userService.deleteUserByIds(userIds));
     }
+    
+
 }

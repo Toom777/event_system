@@ -1,14 +1,19 @@
 <template>
   <header>
       <div class="l-content">
-        <el-button plain icon="el-icon-menu" size="mini"></el-button>
-        <h3 style="color: #ffffff">首页</h3>
-        <p style="color: white; margin-left: 100px">{{name}}</p>
+        <!--<el-button plain icon="el-icon-menu" size="mini"></el-button>
+        <h3 style="color: #ffffff">首页</h3>-->
+
+        <!--面包屑-->
+<!--        <el-breadcrumb separator="/" >
+          <el-breadcrumb-item v-for="item in tags" :key="item.path" :to="{ path: item.path }">{{item.label}}</el-breadcrumb-item>
+        </el-breadcrumb>-->
       </div>
       <div class="r-content">
+        <p style="color: white; margin-right: 20px">{{name}}</p>
         <el-dropdown>
-          <el-button class="user" type="primary">
-          </el-button>
+
+          <span><img :src="userImg"  class="user"></span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item>个人信息</el-dropdown-item>
             <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
@@ -19,11 +24,13 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: "Header",
   data() {
     return {
-      name: ''
+      name: '',
+      userImg: require('../assets/images/user.jpg')
     }
   },
   methods: {
@@ -51,6 +58,12 @@ export default {
         });
       });
     }
+
+  },
+  computed: {
+    ...mapState({
+      tags: state => state.tab.tabsList
+    })
   },
   created() {
     this.getUserName()

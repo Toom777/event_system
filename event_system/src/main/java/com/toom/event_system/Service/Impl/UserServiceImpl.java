@@ -67,7 +67,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public Boolean insertUser(User user) {
-        return userMapper.insert(user) > 0 ? true : false;
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq("username", user.getUsername());
+        if (userMapper.selectOne(wrapper) == null){
+            return userMapper.insert(user) > 0 ? true : false;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -116,5 +122,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         wrapper.eq("username", username);
         User user = userMapper.selectOne(wrapper);
         return user;
+    }
+
+    /**
+     * 用户数量统计
+     * @return
+     */
+    @Override
+    public Long countUser() {
+        return userMapper.selectCount(null);
+    }
+
+    /**
+     * 统计服务时长
+     * @return
+     */
+    @Override
+    public Long countHours() {
+        return userMapper.hoursCount();
     }
 }

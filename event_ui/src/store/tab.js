@@ -9,16 +9,26 @@ export default {
                 icon: 'home'
             }
         ],
+        /*选中菜单*/
         currentMenu: null
     },
+    actions: {
+        selectMenu(context, value) {
+/*            console.log("这是context：",context);
+            console.log("这是val：",value);*/
+            context.commit('ElSelectMenu', value);
+        }
+    },
     mutations: {
-        /*菜单栏收缩*/
         collapseMenu(state) {
-            state.isCollapse = !state.isCollapse
+            state.isCollapse = !state.isCollapse;
         },
-        selectMenu(state, val){
-            if (val.name !== 'home') {
-                state.currentMenu = valconst
+        ElSelectMenu(state, val){
+/*            console.log("mutations中的state:", state);
+            console.log("mutations中的val:", val);*/
+            if (val !== 'home') {
+                state.currentMenu = val
+/*                console.log("加工后的state:", state);*/
                 const result = state.tabsList.findIndex(item => item.name === val.name)
                 if (result === -1) {
                     state.tabsList.push(val)

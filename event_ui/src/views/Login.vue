@@ -107,32 +107,10 @@ export default {
             });
           }).catch(() => {
             this.loading = false;
+            this.loginForm.code = '';
             this.getCode();
           })
         }
-        /*if (valid){
-          this.loading = true;
-          this.axios.post("/login", this.loginForm).then(res => {
-            console.log(this.loginForm)
-            /!*将登录表单提交到store*!/
-            this.$store.commit("SET_TOKEN", res.data.data.token)
-            this.$store.commit("SET_USERINFO", res.data.data.user)
-            this.$store.commit("SET_NAME", res.data.data.user.name)
-            this.$store.commit("SET_AVATAR", res.data.data.user.avatar)
-            this.$store.commit("SET_ROLES", res.data.data.roles)
-            this.$store.commit("SET_PERMISSIONS", res.data.data.permissions)
-            /!*跳转到首页*!/
-            this.$router.push("/index")
-            this.$message({
-              showClose: true,
-              message: this.$store.getters.getName + ' 登录成功',
-              type: 'success'
-            });
-          }).catch(() => {
-            this.loading = false;
-            this.getCode();
-          })
-        }*/
       });
     },
     register(){

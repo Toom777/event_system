@@ -1,5 +1,6 @@
 package com.toom.event_system.Mapper;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.toom.event_system.Entity.User;
 import org.junit.jupiter.api.Test;
@@ -58,6 +59,28 @@ class UserMapperTest {
         System.out.println("是否有下一页: " + page.hasNext());
         //是否有上一页
         System.out.println("是否有上一页: " + page.hasPrevious());
+
+    }
+
+    @Test
+    void countTest(){
+        System.out.println(userMapper.selectCount(null));
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.select("hours");
+        System.out.println(userMapper.hoursCount());
+    }
+
+    @Test
+    void findTest() {
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq("username", "admin1");
+        User user = userMapper.selectOne(wrapper);
+        if (user == null) {
+            System.out.println("居然有");
+        } else {
+            System.out.println("没有这个");
+        }
+
 
     }
 }

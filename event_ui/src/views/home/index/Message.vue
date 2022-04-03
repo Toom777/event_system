@@ -8,7 +8,8 @@
           <el-table-column
               prop="notice"
               label="最新公告"
-              width="450">
+              min-width="90%"
+              >
             <template slot-scope="scope">
               <el-link href="scope.row.notice">{{scope.row.notice}}</el-link>
               <p>发布：</p>
@@ -17,7 +18,8 @@
 
           <el-table-column
               prop="messageDate"
-              width="100">
+              min-width="10%"
+              >
             <template slot="header" slot-scope="scope">
               <a href="" target="_blank">More<<</a>
             </template>
@@ -32,7 +34,8 @@
           <el-table-column
               prop="news"
               label="最新资讯"
-              width="450">
+              min-width="90%"
+              >
             <template slot-scope="scope">
               <el-link href="scope.row.news">{{scope.row.news}}</el-link>
               <p>发布：</p>
@@ -41,7 +44,7 @@
 
           <el-table-column
               prop="newsDate"
-              width="100"
+              min-width="10%"
           >
             <template slot="header" slot-scope="scope">
               <a href="" target="_blank">More<<</a>
@@ -101,10 +104,11 @@ p{
   color: #b2b8bb;
 }
 .x-index-section{
-  display: flex;
+  margin-top: 50px;
+  /*  display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 100%;*/
 }
 
 

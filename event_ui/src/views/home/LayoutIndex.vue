@@ -1,7 +1,7 @@
 <template>
   <el-container style="height: 100%;">
     <!--左侧菜单栏-->
-    <el-aside width="180px">
+    <el-aside width="200px">
       <nav-menu></nav-menu>
     </el-aside>
 
@@ -12,7 +12,7 @@
       </el-header>
       <!--主要页面-->
       <el-main>
-        <router-view></router-view>
+          <router-view></router-view>
       </el-main>
     </el-container>
   </el-container>
@@ -24,6 +24,7 @@ import Header from "@/components/Header";
 export default {
   name: "index",
   components: {Header, NavMenu},
+
 }
 </script>
 

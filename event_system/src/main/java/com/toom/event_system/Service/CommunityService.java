@@ -16,6 +16,11 @@ import java.util.Map;
 public interface CommunityService extends IService<Community> {
 
     /**
+     * 获取该社区下所有用户
+     */
+
+
+    /**
      * 获取所有社区
      */
     public List<Community> selectCommunityAll();

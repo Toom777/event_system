@@ -7,6 +7,7 @@ export function communityIdAndName(){
     })
 }
 
+
 // 查询社区列表
 export function listCommunity(query) {
     return axios({

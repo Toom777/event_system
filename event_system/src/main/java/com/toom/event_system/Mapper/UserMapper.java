@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.toom.event_system.Entity.User;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,5 +19,10 @@ public interface UserMapper extends BaseMapper<User> {
 
     List<User> selectUserVo(@Param("page") Page<User> page, @Param("communityId") Long communityId);
 
-
+    /**
+     * 统计所有用户服务时长
+     * @return
+     */
+    @Select("SELECT SUM(hours) FROM `user`")
+    Long hoursCount();
 }

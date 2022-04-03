@@ -8,6 +8,10 @@ const routes = [
     path: '/',
     redirect: '/login'
   },
+/*  {
+    path: '/404',
+    component: () => import('@/views/404')
+  },*/
   {
     /*登录页*/
     path: '/login',
@@ -20,7 +24,6 @@ const routes = [
     name: 'Register',
     component: () => import('../views/Register')
   },
-
   {
     /*布局页*/
     path: '/index',
@@ -33,14 +36,22 @@ const routes = [
         path: '/home',
         name: 'Home',
         component:() => import('../views/home/index/home'),
-/*        children: [
+        redirect: '/mainContent',
+        children: [
           {
-            /!*首页内容*!/
-            path: '/main',
-            name: 'main',
-            component: () => import('../views/home/index/main')
+            /*首页内容*/
+            path: '/mainContent',
+            name: 'MainContent',
+            component: () => import('../views/home/index/MainContent')
+          },
+          {
+            /*首页内容*/
+            path: '/activityContent',
+            name: 'ActivityContent',
+            component: () => import('../views/home/index/ActivityContent')
           }
-        ]*/
+        ]
+
       },
       /*用户*/
       {
@@ -67,8 +78,13 @@ const routes = [
           },
           {
             path: '/list',
-            name: 'List',
+            name: 'ActivityList',
             component:() => import('../views/home/activity/list')
+          },
+          {
+            path: '/confirmation',
+            name: 'Confirmation',
+            component: () => import('../views/home/activity/confirmation')
           }
         ]
       },
