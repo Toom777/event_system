@@ -10,6 +10,7 @@ D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\C
 D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Shiro\JwtFilter.java
 D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Common\RegisterBody.java
 D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Common\Utils\KaptchaUtil.java
+D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Service\Impl\UserRoleServiceImpl.java
 D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Entity\BaseEntity.java
 D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Common\Swagger2.java
 D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Entity\LoginBody.java
@@ -37,12 +38,14 @@ D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\A
 D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Common\Utils\MimeTypeUtils.java
 D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Service\Impl\LoginServiceImpl.java
 D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Controller\LoginController.java
+D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Entity\UserRole.java
 D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Mapper\UserMapper.java
 D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Mapper\ActivityMapper.java
 D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Common\MyRealm.java
 D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Service\Impl\CaptchaServiceImpl.java
 D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Entity\CaptchaEntity.java
 D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Exception\CaptchaException.java
+D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Service\UserRoleService.java
 D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Controller\UserController.java
 D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Entity\User.java
 D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Entity\Role.java
@@ -54,6 +57,7 @@ D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\C
 D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Entity\PageInfo.java
 D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Controller\StatisticsController.java
 D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Service\Impl\RoleServiceImpl.java
+D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Mapper\UserRoleMapper.java
 D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Service\MenuService.java
 D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Config\KaptchaTextCreator.java
 D:\Computer\Java_code\JavaWeb\event_system\src\main\java\com\toom\event_system\Common\Utils\StringUtil.java

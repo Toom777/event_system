@@ -166,7 +166,9 @@ export default {
         ],
         sex: [
           { required: true }
-        ]
+        ],
+        community: { required: true, message: '请选择社区'},
+
       },
 
       loading: false

@@ -2,11 +2,14 @@ package com.toom.event_system.Controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.toom.event_system.Common.Result;
 import com.toom.event_system.Entity.PageInfo;
 import com.toom.event_system.Entity.User;
+import com.toom.event_system.Entity.UserRole;
+import com.toom.event_system.Service.UserRoleService;
 import com.toom.event_system.Service.UserService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,9 @@ public class UserController extends BaseController{
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRoleService userRoleService;
 
     /**
      * 测试
@@ -124,7 +130,15 @@ public class UserController extends BaseController{
     @PostMapping("/insert")
     public Result insertUser(@RequestBody User user) {
         user.setCreateBy("admin");
-        return toAjax(userService.insertUser(user));
+        if (userService.insertUser(user)) {
+            UserRole userRole = new UserRole();
+            userRole.setUserId(user.getUserId());
+            userRole.setRoleId(103L);
+            userRoleService.save(userRole);
+            return toAjax(true);
+        } else {
+            return toAjax(false);
+        }
     }
 
     /**
@@ -133,7 +147,19 @@ public class UserController extends BaseController{
     @RequestMapping("/update")
     public Result updateUser(@RequestBody User user){
         user.setUpdateBy("admin");
-        return toAjax(userService.updateUser(user));
+        if (userService.updateUser(user)) {
+            UpdateWrapper<UserRole> wrapper = new UpdateWrapper<>();
+            if (user.getUserType().equals("02")) {
+                wrapper.eq("user_id", user.getUserId()).set("role_id", 102L);
+            } else if (user.getUserType().equals("03")) {
+                wrapper.eq("user_id", user.getUserId()).set("role_id", 103L);
+            }
+            userRoleService.update(null, wrapper);
+            return toAjax(true);
+        } else {
+            return toAjax(false);
+        }
+
     }
 
     /**
@@ -143,6 +169,6 @@ public class UserController extends BaseController{
     public Result removeUser(@PathVariable Long[] userIds){
         return toAjax(userService.deleteUserByIds(userIds));
     }
-    
+
 
 }
