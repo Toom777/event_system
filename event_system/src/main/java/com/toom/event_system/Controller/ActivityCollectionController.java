@@ -5,11 +5,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.toom.event_system.Common.Result;
 import com.toom.event_system.Entity.ActivityCollection;
-import com.toom.event_system.Entity.ActivityCollection;
+
 import com.toom.event_system.Entity.PageInfo;
 import com.toom.event_system.Service.ActivityCollectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 活动收藏
@@ -20,6 +23,25 @@ import org.springframework.web.bind.annotation.*;
 public class ActivityCollectionController  extends BaseController{
     @Autowired
     private ActivityCollectionService activityCollectionService;
+
+    /**
+     * 查看是否收藏某活动
+     */
+    @GetMapping("/confirmCollect")
+    public Result confirmCollect(@RequestParam("activityId") Long activityId,
+                                    @RequestParam("userId") Long userId){
+        QueryWrapper<ActivityCollection> wrapper = new QueryWrapper<>();
+        Map<String, Long> map = new HashMap<>();
+        map.put("user_id", userId);
+        map.put("activity_id", activityId);
+        wrapper.allEq(map);
+        ActivityCollection activityCollection = activityCollectionService.getOne(wrapper);
+        if (activityCollection != null){
+            return Result.success(200);
+        } else {
+            return Result.success(500);
+        }
+    }
 
     /**
      * 分页条件查询活动收藏列表
@@ -84,5 +106,20 @@ public class ActivityCollectionController  extends BaseController{
     @DeleteMapping("/del/{activityCollectionIds}")
     public Result removeActivityCollection(@PathVariable Long[] activityCollectionIds){
         return toAjax(activityCollectionService.deleteActivityCollectionByIds(activityCollectionIds));
+    }
+
+    /**
+     * 通过活动ID、用户ID删除活动收藏
+     */
+    @DeleteMapping("/delByAUId")
+    public Result removeByActivityUserId(@RequestParam("activityId") Long activityId,
+                                         @RequestParam("userId") Long userId) {
+        QueryWrapper<ActivityCollection> wrapper = new QueryWrapper<>();
+        Map<String, Long> map = new HashMap<>();
+        map.put("user_id", userId);
+        map.put("activity_id", activityId);
+        wrapper.allEq(map);
+
+        return toAjax(activityCollectionService.remove(wrapper));
     }
 }

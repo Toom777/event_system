@@ -32,21 +32,22 @@
       >
           <div>
             <ul class="list-group">
+              <el-button @click="deleteCollect" class="collection" type="danger" icon="el-icon-check" v-if="isCollect" circle></el-button>
+              <el-button @click="addCollect" class="collection" type="warning" icon="el-icon-star-off" v-else circle></el-button>
               <h2>{{activity.activityName}}</h2>
               <li class="list-group-item"><table><tbody><tr><td>活动编号</td><td>{{activity.activityId}}</td></tr></tbody></table></li>
               <li class="list-group-item"><table><tbody><tr><td>活动标签</td><td>{{activity.activityTag}}</td></tr></tbody></table></li>
               <li class="list-group-item"><table><tbody><tr><td>发布组织</td><td>{{activity.contactName}}</td></tr></tbody></table></li>
               <li class="list-group-item"><table><tbody><tr><td>活动时间</td><td>{{activity.beginTime}} ~ {{activity.endTime}}</td></tr></tbody></table></li>
               <li class="list-group-item"><table><tbody><tr><td>报名人数</td><td>{{activity.confirmCount}} / {{activity.allowCount}}</td></tr></tbody></table></li>
-              <li class="list-group-item"><table><tbody><tr><td>截止报名</td><td>{{activity.deadTime}}</td></tr></tbody></table></li>
-              <li class="list-group-item"><table><tbody><tr><td>活动地点</td><td><span>{{activity.activityLocation}}</span></td></tr></tbody></table></li>
+              <li class="list-group-item"><table><tbody><tr><td>截止报名</td><td>{{activity.deadline}}</td></tr></tbody></table></li>
+              <li class="list-group-item"><table><tbody><tr><td>活动地点</td><td><span>{{activity.activitiyLocation}}</span></td></tr></tbody></table></li>
               <li class="list-group-item"><table><tbody><tr><td>联系人&emsp;</td><td>{{activity.contactName}}</td></tr></tbody></table></li>
               <li class="list-group-item"><table><tbody><tr><td>联系电话</td><td>{{activity.contactPhone}}</td></tr></tbody></table></li>
               <li class="list-group-item"><table><tbody><tr><td>活动内容</td><td>{{activity.activityContent}}</td></tr></tbody></table></li>
             </ul>
             <el-button plain type="primary" style="width: 100%" @click="handleEnroll" v-if="!confirmBoolean">我要报名</el-button>
             <el-button style="width: 100%" disabled="disabled" v-else>已报名</el-button>
-
           </div>
       </el-tab-pane>
     </el-tabs>
@@ -56,30 +57,60 @@
 <script>
 import {getActivity} from "@/api/activity";
 import {addConfirmation, EnrollJuagement} from "@/api/confirmation";
+import {addCollection, confirmCollect, delCollectionyAUId} from '@/api/collection';
 export default {
   name: "ActivityContent",
   data() {
     return {
+      /*是否收藏*/
+      isCollect: false,
       /*选中的标签*/
       activeName:'letter',
       /*标签不可选*/
       contentVisible: true,
       /*活动内容*/
       activity: {},
-      /*活动确认*/
+      /*活动/收藏 确认*/
       confirmation: {
         userId: this.$store.getters.getUser.userId,
         activityId: parseInt(this.$route.query.activityId),
+      },
+      addForm: {
+        userId: this.$store.getters.getUser.userId,
+        activityId: parseInt(this.$route.query.activityId),
+        activityName: ''
       },
       /*是否报名*/
       confirmBoolean: false,
     }
   },
   methods: {
+    /*取消收藏*/
+    deleteCollect(){
+      delCollectionyAUId(this.confirmation).then(res => {
+        this.isCollect = false;
+      });
+    },
+    /*添加收藏*/
+    addCollect() {
+      addCollection(this.addForm).then(res => {
+        console.log(this.addForm);
+        this.isCollect = true;
+      });
+    },
+    /*查看是否已收藏*/
+    confirmToCollect(){
+      confirmCollect(this.confirmation).then(res => {
+        if (res.data.data == 200) {
+          this.isCollect = true;
+        } else {
+          this.isCollect = false;
+        }
+      });
+    },
     /*查看用户是否已报名*/
-    confirm() {
+    confirmEnroll() {
       EnrollJuagement(this.confirmation).then(res => {
-        console.log(res.data.data == 500);
         if (res.data.data == 200) {
           this.confirmBoolean = true;
         } else {
@@ -91,7 +122,8 @@ export default {
     handleConfirm() {
       this.contentVisible = false;
       this.activeName = 'content';
-      this.confirm();
+      this.confirmEnroll();
+      this.confirmToCollect();
     },
     /*拒绝按钮*/
     handleReject() {
@@ -125,6 +157,7 @@ export default {
     getActivity(){
       getActivity(this.$route.query.activityId).then(res => {
         this.activity = res.data.data;
+        this.addForm.activityName = res.data.data.activityName;
         console.log(this.activity);
       });
     },
@@ -160,5 +193,9 @@ export default {
   padding: 11px 0px;
   font-size: 13px;
 }
-
+.collection{
+  position: absolute;
+  right: 40px;
+  top: 30px;
+}
 </style>

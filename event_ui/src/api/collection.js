@@ -1,5 +1,14 @@
 import axios from '../request'
 
+//查看是否收藏
+export function confirmCollect(query) {
+  return axios({
+    url: '/collection/confirmCollect',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询活动收藏列表
 export function listCollection(query) {
   return axios({
@@ -40,5 +49,14 @@ export function delCollection(collectionId) {
   return axios({
     url: '/collection/del/' + collectionId,
     method: 'delete'
+  })
+}
+
+//根据活动ID和用户ID删除活动收藏
+export function delCollectionyAUId(query) {
+  return axios({
+    url: '/collection/delByAUId',
+    method: 'delete',
+    params: query
   })
 }
