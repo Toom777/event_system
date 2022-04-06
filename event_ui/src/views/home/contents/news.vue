@@ -1,14 +1,26 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="发布人" prop="editor">
-        <el-input
-            v-model="queryParams.editor"
-            placeholder="请输入发布人"
+
+      <el-form-item label="资讯类型" prop="activityTag">
+        <el-select
+            v-model="queryParams.newsType"
             clearable
-            size="small"
-            @keyup.enter.native="handleQuery"
-        />
+            allow-create
+            filterable
+            placeholder="请选择资讯类型"
+        >
+          <el-option
+              v-for="item in typeList"
+              :key="item.typeNum"
+              :label="item.typeName"
+              :value="item.typeNum"
+              @keyup.enter.native="handleQuery"
+          >
+            {{item.typeName}}
+          </el-option>
+        </el-select>
+
       </el-form-item>
       <el-form-item label="资讯标题" prop="newsTitle">
         <el-input
@@ -60,13 +72,14 @@
 
     <el-table v-loading="loading" :data="newsList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="资讯ID" align="center" prop="newsId" />
-      <el-table-column label="发布人名字" align="center" prop="editor" />
+      <el-table-column label="发布人" align="center" prop="editor" />
       <el-table-column label="资讯标题" align="center" prop="newsTitle" />
       <el-table-column label="资讯类型" align="center" prop="newsType" />
-      <el-table-column label="资讯内容" align="center" prop="noticeContent" />
-      <el-table-column label="图片" align="center" prop="picture" />
-      <el-table-column label="资讯状态" align="center" prop="status" />
+      <el-table-column label="资讯状态" align="center" prop="status" >
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.status == '0' ? 'success': 'danger'">{{scope.row.status == '0' ? '正常' : '禁用'}}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -75,14 +88,12 @@
               type="text"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
-              v-hasPermi="['system:news:edit']"
           >修改</el-button>
           <el-button
               size="mini"
               type="text"
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
-              v-hasPermi="['system:news:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -100,8 +111,8 @@
 
 
     <!-- 添加或修改资讯 弹出框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-<!--      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog :title="title" :visible.sync="open" width="1200px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="发布人" prop="editor">
           <el-input v-model="form.editor" placeholder="请输入发布人名字" />
         </el-form-item>
@@ -109,11 +120,11 @@
           <el-input v-model="form.newsTitle" placeholder="请输入资讯标题" />
         </el-form-item>
         <el-form-item label="资讯内容">
-          <editor v-model="form.noticeContent" :min-height="192"/>
+          <quill-editor v-model="form.newsContent" :min-height="192"></quill-editor>
         </el-form-item>
-        <el-form-item label="图片" prop="picture">
+<!--        <el-form-item label="图片" prop="picture">
           <el-input v-model="form.picture" placeholder="请输入图片" />
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
@@ -121,20 +132,20 @@
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
-      </div>-->
+      </div>
 
     </el-dialog>
 
   </div>
 </template>
 <script>
-import { listNews, getNews, delNews, addNews, updateNews } from "@/api/news";
-
+import { listNews, getNews, delNews, addNews, updateNews, listNewsType } from "@/api/news";
+import QuillEditor from "@/components/quillEditor/index";
 
 export default {
   name: "News",
   components: {
-
+    QuillEditor
   },
   data() {
     return {
@@ -158,14 +169,10 @@ export default {
       open: false,
       // 查询参数
       queryParams: {
-        pageNum: 1,
-        pageSize: 10,
-        editor: null,
-        newsTitle: null,
-        newsType: null,
-        noticeContent: null,
-        picture: null,
-        status: null,
+        pageCurrent: 1,
+        pageSize: 5,
+        newsTitle: '',
+        newsType: '',
       },
       // 表单参数
       form: {},
@@ -174,10 +181,20 @@ export default {
         newsTitle: [
           { required: true, message: "资讯标题不能为空", trigger: "blur" }
         ],
-      }
+      },
+      /*资讯类型列表*/
+      typeList:[
+          {typeNum: '', typeName: ''}
+      ],
     };
   },
   methods: {
+    /*获取资讯类型*/
+    getNewsType() {
+      listNewsType().then(res => {
+        this.typeList = res.data.data;
+      });
+    },
     /*获取当前点击页*/
     getPage(currentPage){
       this.queryParams.pageCurrent = currentPage;
@@ -187,8 +204,8 @@ export default {
     getList() {
       this.loading = true;
       listNews(this.queryParams).then(response => {
-        this.newsList = response.rows;
-        this.total = response.total;
+        this.newsList = response.data.rows;
+        this.total = response.data.total;
         this.loading = false;
       });
     },
@@ -204,7 +221,7 @@ export default {
         editor: null,
         newsTitle: null,
         newsType: null,
-        noticeContent: null,
+        newsContent: null,
         picture: null,
         status: "0",
         createBy: null,
@@ -217,7 +234,7 @@ export default {
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1;
+      this.queryParams.pageCurrent = 1;
       this.getList();
     },
     /** 重置按钮操作 */
@@ -245,7 +262,7 @@ export default {
       this.reset();
       const newsId = row.newsId || this.ids
       getNews(newsId).then(response => {
-        this.form = response.data;
+        this.form = response.data.data;
         this.open = true;
         this.title = "修改资讯";
       });
@@ -261,6 +278,7 @@ export default {
                 type: 'success'
               });
               this.open = false;
+              this.getNewsType();
               this.getList();
             });
           } else {
@@ -270,6 +288,7 @@ export default {
                 type: 'success'
               });
               this.open = false;
+              this.getNewsType();
               this.getList();
             });
           }
@@ -282,6 +301,7 @@ export default {
       this.$modal.confirm('是否确认删除资讯编号为"' + newsIds + '"的数据项？').then(function() {
         return delNews(newsIds);
       }).then(() => {
+        this.getNewsType();
         this.getList();
         this.$message({
           message: '删除成功',
@@ -289,6 +309,10 @@ export default {
         });
       }).catch(() => {});
     }
+  },
+  created() {
+    this.getList();
+    this.getNewsType();
   }
 }
 </script>

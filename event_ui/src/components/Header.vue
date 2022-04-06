@@ -8,6 +8,9 @@
 <!--        <el-breadcrumb separator="/" >
           <el-breadcrumb-item v-for="item in tags" :key="item.path" :to="{ path: item.path }">{{item.label}}</el-breadcrumb-item>
         </el-breadcrumb>-->
+        <el-breadcrumb separator="/">
+          <el-breadcrumb-item class="myColor" :to="{ path: '/home' }">首页</el-breadcrumb-item>
+        </el-breadcrumb>
       </div>
       <div class="r-content">
         <p style="color: white; margin-right: 20px">{{name}}</p>
@@ -15,7 +18,9 @@
 
           <span><img :src="userImg"  class="user"></span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>个人信息</el-dropdown-item>
+            <el-dropdown-item @click.native="toInformation">个人信息</el-dropdown-item>
+            <el-dropdown-item @click.native="toActivity">我的活动</el-dropdown-item>
+            <el-dropdown-item @click.native="toCollection">我的收藏</el-dropdown-item>
             <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -34,10 +39,35 @@ export default {
     }
   },
   methods: {
+    toCollection() {
+      this.$router.push({
+        path: "/userCollection",
+        query: {
+          userId: this.$store.getters.getUser.userId
+        }
+      });
+    },
+    toActivity() {
+      this.$router.push({
+        path: "/userActivity",
+        query: {
+          userId: this.$store.getters.getUser.userId
+        }
+      });
+    },
     /*获取用户名*/
     getUserName() {
       this.name = this.$store.getters.getUser.name
     },
+    toInformation(){
+      this.$router.push({
+        path: "/information",
+        query: {
+          userId: this.$store.getters.getUser.userId
+        }
+      })
+    },
+
     /*退出登录*/
     logout(){
       this.$confirm('确认退出?', '提示', {
@@ -95,5 +125,13 @@ header{
   width: 40px;
   height: 40px;
   border-radius: 50%;
+}
+.myColor /deep/ .el-breadcrumb__inner {
+  color: #ffffff ;
+}
+
+.myColor /deep/ .el-breadcrumb__inner:hover{
+  color: #ffe168 ;
+  cursor: default;
 }
 </style>

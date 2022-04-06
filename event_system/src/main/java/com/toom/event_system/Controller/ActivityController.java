@@ -27,6 +27,8 @@ public class ActivityController extends BaseController{
     @Autowired
     private ActivityService activityService;
 
+
+
     /**
      * 获取活动标签
      */

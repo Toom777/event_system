@@ -1,9 +1,17 @@
 import axios from '../request'
 
+// 获取资讯类型
+export function listNewsType() {
+  return axios({
+    url: '/news/getNewsType',
+    method: 'get'
+  })
+}
+
 // 查询资讯列表
 export function listNews(query) {
   return axios({
-    url: '/news/list',
+    url: '/news/searchList',
     method: 'get',
     params: query
   })
@@ -12,7 +20,7 @@ export function listNews(query) {
 // 查询资讯详细
 export function getNews(newsId) {
   return axios({
-    url: '/news/' + newsId,
+    url: '/news/selectById/' + newsId,
     method: 'get'
   })
 }
@@ -20,7 +28,7 @@ export function getNews(newsId) {
 // 新增资讯
 export function addNews(data) {
   return axios({
-    url: '/news',
+    url: '/news/insert',
     method: 'post',
     data: data
   })
@@ -29,7 +37,7 @@ export function addNews(data) {
 // 修改资讯
 export function updateNews(data) {
   return axios({
-    url: '/news',
+    url: '/news/update',
     method: 'put',
     data: data
   })
@@ -38,7 +46,7 @@ export function updateNews(data) {
 // 删除资讯
 export function delNews(newsId) {
   return axios({
-    url: '/news/' + newsId,
+    url: '/news/del/' + newsId,
     method: 'delete'
   })
 }

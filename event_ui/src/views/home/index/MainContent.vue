@@ -5,14 +5,16 @@
       <carousel-content/>
     </el-row>
 
-    <!--数据统计-->
-    <statistics/>
-
     <!--消息栏-->
     <el-row>
       <message/>
     </el-row>
-
+    <!--数据统计-->
+    <statistics/>
+    <!--活动栏-->
+    <el-row>
+      <new-activity/>
+    </el-row>
 
   </div>
 </template>
@@ -21,9 +23,10 @@
 import Message from "@/views/home/index/Message";
 import Statistics from "@/views/home/index/Statistics";
 import CarouselContent from "@/views/home/index/CarouselContent";
+import NewActivity from "@/views/home/index/NewActivity";
 export default {
   name: "MainContent",
-  components: {CarouselContent, Statistics, Message}
+  components: {NewActivity, CarouselContent, Statistics, Message}
 }
 </script>
 

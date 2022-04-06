@@ -17,7 +17,6 @@ import java.util.List;
 @Repository
 public interface UserMapper extends BaseMapper<User> {
 
-    List<User> selectUserVo(@Param("page") Page<User> page, @Param("communityId") Long communityId);
 
     /**
      * 统计所有用户服务时长

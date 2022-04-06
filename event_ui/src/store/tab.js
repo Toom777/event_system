@@ -1,5 +1,6 @@
 export default {
     state: {
+        /*菜单栏收缩*/
         isCollapse: false,
         tabsList: [
             {

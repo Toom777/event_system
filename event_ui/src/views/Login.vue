@@ -1,6 +1,11 @@
 <template>
   <div id="app" class="login">
-    <el-form :model="loginForm" :rules="rules" ref="loginForm" @keyup.enter.native="submitForm" label-width="100px" class="login-form">
+    <el-form :model="loginForm"
+             :rules="rules"
+             ref="loginForm"
+             @keyup.enter.native="submitForm"
+             label-width="100px"
+             class="login-form">
       <h3 class="title">社区公益活动管理系统</h3>
       <!--账号-->
       <el-form-item prop="username">

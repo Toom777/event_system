@@ -415,25 +415,12 @@ export default {
         communityId: '',
         username: '',
         name: '',
-/*        userType: '',
-        email: '',
-        phone: '',
-        sex: '',
-        politicalStatus: '',
-        career: '',
-        birthday: null,
-        points: null,
-        sating: null,
-        hours: null,
-        avatar: '',
-        status: '',
-        loginIp: '',
-        loginDate: null,*/
       },
       /*用户类型列表 此处直接写死了*/
       userTypeList: [
         { label: '普通用户', value: '03'},
-        { label: '社区管理员', value: '02'}
+        { label: '社区管理员', value: '02'},
+        { label: '超级管理员', value: '01'}
       ],
       /*社区列表*/
       communityList: {

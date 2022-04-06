@@ -8,7 +8,6 @@ import './assets/css/gobal.css'
 import axios from "axios";
 import './request.js'
 
-
 Vue.prototype.axios = axios
 
 Vue.config.productionTip = false

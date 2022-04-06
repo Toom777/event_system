@@ -1,17 +1,20 @@
 <template>
   <div>
     <h3>留言管理</h3>
-      <editor-tinymce/>
+    <!--<quill-editor/>-->
+    <line-chart/>
   </div>
 
 </template>
 
 <script>
-import EditorTinymce from '@/components/myTinymce/index'
+import quillEditor from '@/components/quillEditor/index'
+import LineChart from "@/components/LineChart";
 export default {
   name: "index",
   components: {
-    EditorTinymce
+    LineChart,
+    quillEditor
   },
   data() {
     return {

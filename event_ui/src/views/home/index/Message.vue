@@ -3,22 +3,23 @@
     <el-row :gutter="20">
       <el-col :span="12">
         <el-table
-            :data="messageData"
+            :data="noticeData"
             stripe>
           <el-table-column
               prop="notice"
               label="最新公告"
-              min-width="90%"
+              min-width="80%"
               >
             <template slot-scope="scope">
-              <el-link href="scope.row.notice">{{scope.row.notice}}</el-link>
-              <p>发布：</p>
+              <el-link @click="noticePush(scope.row.noticeId)">{{scope.row.noticeTitle}}</el-link>
+              <p>发布：{{scope.row.editor}}</p>
             </template>
           </el-table-column>
 
           <el-table-column
-              prop="messageDate"
-              min-width="10%"
+              prop="createTime"
+              min-width="15%"
+              :formatter="dateFormat"
               >
             <template slot="header" slot-scope="scope">
               <a href="" target="_blank">More<<</a>
@@ -34,17 +35,18 @@
           <el-table-column
               prop="news"
               label="最新资讯"
-              min-width="90%"
+              min-width="80%"
               >
             <template slot-scope="scope">
-              <el-link href="scope.row.news">{{scope.row.news}}</el-link>
-              <p>发布：</p>
+              <el-link @click="newsPush(scope.row.newsId)">{{scope.row.newsTitle}}</el-link>
+              <p>发布：{{scope.row.editor}}</p>
             </template>
           </el-table-column>
 
           <el-table-column
-              prop="newsDate"
-              min-width="10%"
+              prop="createTime"
+              min-width="15%"
+              :formatter="dateFormat"
           >
             <template slot="header" slot-scope="scope">
               <a href="" target="_blank">More<<</a>
@@ -59,38 +61,76 @@
 </template>
 
 <script>
+import { listNotice } from '@/api/notice';
+import {listNews} from "@/api/news";
 export default {
   name: "Message",
   data() {
     return {
 
-      messageData: [{
-        notice: '校内天梯选拔赛开始报名啦！',
-        messageDate :'2020-3-6'
-      }, {
-        notice: '校内天梯选拔赛开始报名啦！',
-        messageDate :'2020-3-6'
-      }, {
-        notice: '校内天梯选拔赛开始报名啦！',
-        messageDate :'2020-3-6'
-      }, {
-        notice: '校内天梯选拔赛开始报名啦！',
-        messageDate :'2020-3-6'
-      }],
-      newsData: [{
-        news: '校内天梯选拔赛开始报名啦！',
-        newsDate :'2020-3-6'
-      }, {
-        news: '校内天梯选拔赛开始报名啦！',
-        newsDate :'2020-3-6'
-      }, {
-        news: '校内天梯选拔赛开始报名啦！',
-        newsDate :'2020-3-6'
-      }, {
-        news: '校内天梯选拔赛开始报名啦！',
-        newsDate :'2020-3-5'
-      }]
+      noticeData: [],
+      newsData: [],
+      // 公告查询参数
+      noticeParams: {
+        pageCurrent: 1,
+        pageSize: 4,
+        editor: '',
+        noticeTitle: '',
+      },
+      /*资讯查询参数*/
+      newsParams: {
+        pageCurrent: 1,
+        pageSize: 4,
+        newsTitle: '',
+        newsType: ''
+      }
+
+
     }
+  },
+  methods: {
+    /*资讯跳转*/
+    newsPush(row) {
+      this.$router.push({
+        path: '/newsContent',
+        query: {
+          newsId: row
+        }
+      })
+    },
+    /*公告跳转*/
+    noticePush(row) {
+      this.$router.push({
+        path: '/noticeContent',
+        query: {
+          noticeId: row
+        }
+      })
+    },
+    /*日期格式化*/
+    dateFormat(row, column){
+      let data = row[column.property];
+      if(data == null) {
+        return null
+      }
+      let dt = new Date(data);
+      return dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate();
+
+    },
+    getNoticeList() {
+      listNotice(this.noticeParams).then(res => {
+        this.noticeData = res.data.rows;
+      })
+    },
+    getNewsList() {
+      listNews(this.newsParams).then(res => {
+        this.newsData = res.data.rows;
+      })
+    },
+  },
+  created() {
+    this.getNoticeList();
+    this.getNewsList();
   }
 }
 </script>

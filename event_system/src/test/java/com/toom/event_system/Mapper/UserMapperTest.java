@@ -46,7 +46,6 @@ class UserMapperTest {
     @Test
     void PageTestVo() {
         Page<User> page = new Page<>(1, 5);
-        userMapper.selectUserVo(page, 1L);
         //获取当前页数据
         System.out.println(page.getRecords());
         //获取当前页页码

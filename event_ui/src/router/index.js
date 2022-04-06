@@ -45,10 +45,46 @@ const routes = [
             component: () => import('../views/home/index/MainContent')
           },
           {
-            /*首页内容*/
+            /*活动内容*/
             path: '/activityContent',
             name: 'ActivityContent',
             component: () => import('../views/home/index/ActivityContent')
+          },
+          {
+            /*公告内容*/
+            path: '/noticeContent',
+            name: 'NoticeContent',
+            component: () => import('../views/home/index/NoticeContent')
+          },
+          {
+            /*个人信息*/
+            path: '/information',
+            name: 'Information',
+            component: () => import('../views/home/index/Information')
+          },
+          {
+            /*资讯内容*/
+            path: '/newsContent',
+            name: 'NewsContent',
+            component: () => import('../views/home/index/newsContent')
+          },
+          {
+            /*我的活动*/
+            path: '/userActivity',
+            name: 'UserActivity',
+            component: () => import('../views/home/index/userActivity')
+          },
+          {
+            /*我的收藏*/
+            path: '/userCollection',
+            name: 'UserCollection',
+            component: () => import('../views/home/index/userCollection')
+          },
+          {
+            /*数据统计*/
+            path: '/charts',
+            name: 'Charts,',
+            component: () => import('../views/home/echarts/index')
           }
         ]
 

@@ -19,6 +19,7 @@ const user = {
         SET_USERINFO: (state, userInfo) => {
             state.userInfo = userInfo;
             localStorage.setItem("userInfo", JSON.stringify(userInfo));
+            /*console.log("13213:", state.userInfo.userId)*/
         }
         ,
         SET_NAME: (state, name) => {
@@ -63,7 +64,7 @@ const user = {
             const uuid = userInfo.uuid
             return new Promise((resolve, reject) => {
             login(username, password, code, uuid).then(res => {
-                //console.log(res)
+                /*console.log(res)*/
                 /*将登录表单提交到store*/
                 commit("SET_TOKEN", res.data.data.token)
                 commit("SET_USERINFO", res.data.data.user)

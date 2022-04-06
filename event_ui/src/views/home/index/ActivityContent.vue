@@ -32,20 +32,21 @@
       >
           <div>
             <ul class="list-group">
-              <!--TODO  考虑上面放个图或者logo-->
+              <h2>{{activity.activityName}}</h2>
               <li class="list-group-item"><table><tbody><tr><td>活动编号</td><td>{{activity.activityId}}</td></tr></tbody></table></li>
-              <li class="list-group-item"><table><tbody><tr><td>活动名称</td><td>{{activity.activityName}}</td></tr></tbody></table></li>
               <li class="list-group-item"><table><tbody><tr><td>活动标签</td><td>{{activity.activityTag}}</td></tr></tbody></table></li>
               <li class="list-group-item"><table><tbody><tr><td>发布组织</td><td>{{activity.contactName}}</td></tr></tbody></table></li>
               <li class="list-group-item"><table><tbody><tr><td>活动时间</td><td>{{activity.beginTime}} ~ {{activity.endTime}}</td></tr></tbody></table></li>
-              <li class="list-group-item"><table><tbody><tr><td>报名人数</td><td>{{activity.allowCount}} / {{activity.confirmCount}}</td></tr></tbody></table></li>
+              <li class="list-group-item"><table><tbody><tr><td>报名人数</td><td>{{activity.confirmCount}} / {{activity.allowCount}}</td></tr></tbody></table></li>
               <li class="list-group-item"><table><tbody><tr><td>截止报名</td><td>{{activity.deadTime}}</td></tr></tbody></table></li>
               <li class="list-group-item"><table><tbody><tr><td>活动地点</td><td><span>{{activity.activityLocation}}</span></td></tr></tbody></table></li>
               <li class="list-group-item"><table><tbody><tr><td>联系人&emsp;</td><td>{{activity.contactName}}</td></tr></tbody></table></li>
               <li class="list-group-item"><table><tbody><tr><td>联系电话</td><td>{{activity.contactPhone}}</td></tr></tbody></table></li>
-              <li class="list-group-item"><table><tbody><tr><td>活动内容</td><td>{{activity.content}}</td></tr></tbody></table></li>
+              <li class="list-group-item"><table><tbody><tr><td>活动内容</td><td>{{activity.activityContent}}</td></tr></tbody></table></li>
             </ul>
-            <el-button plain type="primary" style="width: 100%" @click="handleEnroll">我要报名</el-button>
+            <el-button plain type="primary" style="width: 100%" @click="handleEnroll" v-if="!confirmBoolean">我要报名</el-button>
+            <el-button style="width: 100%" disabled="disabled" v-else>已报名</el-button>
+
           </div>
       </el-tab-pane>
     </el-tabs>
@@ -53,6 +54,8 @@
 </template>
 
 <script>
+import {getActivity} from "@/api/activity";
+import {addConfirmation, EnrollJuagement} from "@/api/confirmation";
 export default {
   name: "ActivityContent",
   data() {
@@ -62,30 +65,34 @@ export default {
       /*标签不可选*/
       contentVisible: true,
       /*活动内容*/
-      activity: {
-        activityId: 1001,
-        activityName: "一个不错的活动",
-        activityTag: "活动标签",
-        content: "这是本次活动的全部内容",
-        requirement: "报名要求",
-        allowCount: 9,
-        confirmCount: 10,
-        beginTime: "2020-03-04 10:00",
-        endTime: "2020-03-04 12:00",
-        deadTime: "2020-03-03 23:00",
-        contactName: "张三",
-        contactPhone: "13212345678",
-        activityLocation: "活动地点"
-      }
+      activity: {},
+      /*活动确认*/
+      confirmation: {
+        userId: this.$store.getters.getUser.userId,
+        activityId: parseInt(this.$route.query.activityId),
+      },
+      /*是否报名*/
+      confirmBoolean: false,
     }
   },
   methods: {
+    /*查看用户是否已报名*/
+    confirm() {
+      EnrollJuagement(this.confirmation).then(res => {
+        console.log(res.data.data == 500);
+        if (res.data.data == 200) {
+          this.confirmBoolean = true;
+        } else {
+          this.confirmBoolean = false;
+        }
+      });
+    },
     /*同意按钮*/
     handleConfirm() {
       this.contentVisible = false;
-      this.activeName = 'content'
+      this.activeName = 'content';
+      this.confirm();
     },
-
     /*拒绝按钮*/
     handleReject() {
       this.$router.push("/home")
@@ -101,19 +108,30 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '报名成功!'
-        });
+        addConfirmation(this.confirmation).then(res => {
+          this.$message({
+            type: 'success',
+            message: '报名成功!'
+          });
+        })
       }).catch(() => {
         this.$message({
           type: 'info',
           message: '已取消报名'
         });
       });
-    }
+    },
+    /*获取活动详情*/
+    getActivity(){
+      getActivity(this.$route.query.activityId).then(res => {
+        this.activity = res.data.data;
+        console.log(this.activity);
+      });
+    },
   },
   created() {
+    this.getActivity();
+
   }
 }
 </script>

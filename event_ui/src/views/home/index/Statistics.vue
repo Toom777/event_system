@@ -71,7 +71,7 @@ export default {
   methods: {
     /*更多数据跳转*/
     handleMore() {
-      this.$router.push("/activityContent")
+      this.$router.push("/charts")
     },
     /*获取数据*/
     getNum() {

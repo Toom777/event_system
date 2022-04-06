@@ -82,16 +82,7 @@
             @click="handleDelete"
         >删除</el-button>
       </el-col>
-<!--      <el-col :span="1.5">
-        <el-button
-            type="warning"
-            plain
-            icon="el-icon-download"
-            size="mini"
-            @click="handleExport"
-            v-hasPermi="['system:activity:export']"
-        >导出</el-button>
-      </el-col>-->
+
     </el-row>
 
     <el-table v-loading="loading" :data="activityList" @selection-change="handleSelectionChange">
@@ -99,8 +90,11 @@
 <!--      <el-table-column label="活动ID" align="center" prop="activityId" />
       <el-table-column label="发布人ID" align="center" prop="userId" />-->
       <el-table-column label="活动名称" align="center" prop="activityName" />
-      <el-table-column label="活动标签" align="center" prop="activityTag" />
-      <el-table-column label="报名要求" align="center" prop="requirement" />
+      <el-table-column label="活动标签" align="center" prop="activityTag" >
+        <template slot-scope="scope">
+          <el-tag>{{scope.row.activityTag}}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="可报名人数" align="center" prop="allowCount" />
       <el-table-column label="已报名人数" align="center" prop="confirmCount" />
       <el-table-column label="报名截止时间" align="center" prop="deadline" width="180">

@@ -153,6 +153,8 @@ public class UserController extends BaseController{
                 wrapper.eq("user_id", user.getUserId()).set("role_id", 102L);
             } else if (user.getUserType().equals("03")) {
                 wrapper.eq("user_id", user.getUserId()).set("role_id", 103L);
+            } else if (user.getUserType().equals("01")){
+                wrapper.eq("user_id", user.getUserId()).set("role_id", 101L);
             }
             userRoleService.update(null, wrapper);
             return toAjax(true);
