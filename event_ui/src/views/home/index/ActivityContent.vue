@@ -74,6 +74,8 @@ export default {
       confirmation: {
         userId: this.$store.getters.getUser.userId,
         activityId: parseInt(this.$route.query.activityId),
+        activityName: '',
+        userName: ''
       },
       addForm: {
         userId: this.$store.getters.getUser.userId,
@@ -85,6 +87,21 @@ export default {
     }
   },
   methods: {
+    /*日期格式转化*/
+    dateFotmat(time){
+      var date=new Date(time);
+      var year=date.getFullYear();
+      /* 在日期格式中，月份是从0开始的，因此要加0
+       * 使用三元表达式在小于10的前面加0，以达到格式统一  如 09:11:05
+       * */
+      var month= date.getMonth()+1<10 ? "0"+(date.getMonth()+1) : date.getMonth()+1;
+      var day=date.getDate()<10 ? "0"+date.getDate() : date.getDate();
+      var hours=date.getHours()<10 ? "0"+date.getHours() : date.getHours();
+      var minutes=date.getMinutes()<10 ? "0"+date.getMinutes() : date.getMinutes();
+      var seconds=date.getSeconds()<10 ? "0"+date.getSeconds() : date.getSeconds();
+      // 拼接
+      return year+"-"+month+"-"+day+" "+hours+":"+minutes+":"+seconds;
+    },
     /*取消收藏*/
     deleteCollect(){
       delCollectionyAUId(this.confirmation).then(res => {
@@ -135,30 +152,51 @@ export default {
     },
     /*报名活动*/
     handleEnroll(){
-      this.$confirm('是否报名' + this.activity.activityName, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        addConfirmation(this.confirmation).then(res => {
+      if (this.activity.deadline > this.dateFotmat(new Date())){
+
+        this.$confirm('是否报名' + this.activity.activityName, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+
+          if (this.activity.allowCount > this.activity.confirmCount) {
+            this.confirmation.activityName = this.addForm.activityName;
+            this.confirmation.userName = this.$store.getters.getUser.name;
+            addConfirmation(this.confirmation).then(res => {
+              this.confirmBoolean = true;
+              this.$message({
+                type: 'success',
+                message: '报名成功!'
+              });
+              this.getActivity();
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: '报名人数已满!'
+            });
+          }
+
+        }).catch(() => {
           this.$message({
-            type: 'success',
-            message: '报名成功!'
+            type: 'info',
+            message: '已取消报名'
           });
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消报名'
         });
-      });
+      } else {
+        this.$message({
+          type: 'error',
+          message: '已过报名时间！'
+        });
+      }
+
     },
     /*获取活动详情*/
     getActivity(){
       getActivity(this.$route.query.activityId).then(res => {
         this.activity = res.data.data;
         this.addForm.activityName = res.data.data.activityName;
-        console.log(this.activity);
       });
     },
   },

@@ -85,6 +85,24 @@ const routes = [
             path: '/charts',
             name: 'Charts,',
             component: () => import('../views/home/echarts/index')
+          },
+          {
+            /*更多公告*/
+            path: '/moreNotice',
+            name: 'MoreNotice',
+            component: () =>  import('../views/home/index/MoreNotice')
+          },
+          {
+            /*更多资讯*/
+            path: '/moreNews',
+            name: 'MoreNews',
+            component: () =>  import('../views/home/index/MoreNews')
+          },
+          {
+            /*更多活动*/
+            path: '/moreActivity',
+            name: 'MoreActivity',
+            component: () =>  import('../views/home/index/MoreActivity')
           }
         ]
 

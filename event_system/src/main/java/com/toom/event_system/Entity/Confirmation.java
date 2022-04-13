@@ -6,11 +6,14 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * 活动确认表
@@ -22,8 +25,8 @@ import lombok.Setter;
 public class Confirmation extends BaseEntity {
 
     @ApiModelProperty("确认ID")
-    @TableId(value = "confirmationt_id", type = IdType.AUTO)
-    private Long confirmationtId;
+    @TableId(value = "confirmation_id", type = IdType.AUTO)
+    private Long confirmationId;
 
     @ApiModelProperty("活动ID")
     @TableField("activity_id")
@@ -33,7 +36,17 @@ public class Confirmation extends BaseEntity {
     @TableField("user_id")
     private Long userId;
 
+    @ApiModelProperty("活动名称")
+    @TableField("activity_name")
+    private String activityName;
+
+    @ApiModelProperty("用户名字 ")
+    @TableField("user_name")
+    private String userName;
+
     @ApiModelProperty("报名时间")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField("enrollment_time")
     private LocalDateTime enrollmentTime;
 
@@ -42,10 +55,14 @@ public class Confirmation extends BaseEntity {
     private String result;
 
     @ApiModelProperty("签到时间")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField("check_in")
     private LocalDateTime checkIn;
 
     @ApiModelProperty("签退时间")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField("check_out")
     private LocalDateTime checkOut;
 

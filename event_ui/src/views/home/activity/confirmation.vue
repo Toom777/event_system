@@ -1,44 +1,37 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="活动ID" prop="activityId">
+      <el-form-item label="活动" prop="activityId">
         <el-input
-            v-model="queryParams.activityId"
-            placeholder="请输入活动ID"
+            v-model="queryParams.activityName"
+            placeholder="请输入活动名称"
             clearable
-            size="small"
             @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="用户" prop="userId">
+      <el-form-item label="用户" prop="userName">
         <el-input
-            v-model="queryParams.userId"
-            placeholder="请输入用户ID"
+            v-model="queryParams.userName"
+            placeholder="请输入用户名字"
             clearable
-            size="small"
             @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-<!--      <el-form-item label="报名时间" prop="enrollmentTime">
-        <el-date-picker clearable size="small"
-                        v-model="queryParams.enrollmentTime"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="选择报名时间">
-        </el-date-picker>
-      </el-form-item>-->
       <el-form-item label="审核结果" prop="result">
-        <el-input
-            v-model="queryParams.result"
-            placeholder="请输入审核结果"
-            clearable
-            size="small"
-            @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.result" placeholder="请选择">
+          <el-option
+              v-for="item in resultList"
+              :key="item.result"
+              :label="item.resultName"
+              :value="item.result"
+              @keyup.enter.native="handleQuery"
+          >
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetForm('searchForm')">重置</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetForm('queryForm')">重置</el-button>
       </el-form-item>
     </el-form>
 
@@ -76,8 +69,8 @@
 
     <el-table v-loading="loading" :data="confirmationList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="活动ID" align="center" prop="activityId" />
-      <el-table-column label="用户ID" align="center" prop="userId" />
+      <el-table-column label="活动名称" align="center" prop="activityName" />
+      <el-table-column label="用户名字" align="center" prop="userName" />
       <el-table-column label="报名时间" align="center" prop="enrollmentTime" width="180">
         <template slot-scope="scope">
           <span>{{ scope.row.enrollmentTime }}</span>
@@ -131,15 +124,11 @@
     <!-- 添加或修改活动确认对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="活动ID" prop="activityId">
-          <el-input disabled="disabled" v-model="form.activityId" placeholder="" />
+        <el-form-item label="活动名称" prop="activityName">
+          <el-input disabled="disabled" v-model="form.activityName" placeholder="" />
         </el-form-item>
-        <el-form-item label="姓名" prop="name">
-          <el-input disabled="disabled" v-model="userForm.name" placeholder="" />
-        </el-form-item>
-
-        <el-form-item label="用户ID" prop="userId">
-          <el-input disabled="disabled" v-model="form.userId" placeholder="" />
+        <el-form-item label="用户名字" prop="userName">
+          <el-input disabled="disabled" v-model="form.userName" placeholder="" />
         </el-form-item>
 
         <el-form-item label="报名时间" prop="enrollmentTime">
@@ -152,7 +141,16 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="审核结果" prop="result">
-          <el-input v-model="form.result" placeholder="请输入审核结果" />
+          <el-select v-model="form.result" placeholder="请选择"  :disabled="disabled">
+            <el-option
+                v-for="item in resultList"
+                :key="item.result"
+                :label="item.resultName"
+                :value="item.result"
+                @keyup.enter.native="handleQuery"
+            >
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="签到时间" prop="checkIn">
           <el-date-picker clearable size="small"
@@ -211,11 +209,15 @@ export default {
       queryParams: {
         pageCurrent: 1,
         pageSize: 10,
-        activityId: '',
-        userId: '',
+        activityName: '',
+        userName: '',
+        result: ''
       },
       // 表单参数
       form: {},
+
+      /*不可使用*/
+      disabled: false,
 
       userForm: {},
       // 表单校验
@@ -226,11 +228,29 @@ export default {
         userId: [
           { required: true, message: "用户ID不能为空", trigger: "blur" }
         ],
-      }
+      },
+      resultList: [{
+        result: '0',
+        resultName: '待审核'
+      }, {
+        result: '1',
+        resultName: '通过'
+      }, {
+        result: '2',
+        resultName: '不通过'
+      }]
     };
 
   },
   methods: {
+    /*审核时效*/
+    disabledStatus() {
+      if (this.form.checkIn != null) {
+        this.disabled = true;
+      } else {
+        this.disabled = false;
+      }
+    },
     /*获取当前点击页*/
     getPage(currentPage){
       this.queryParams.pageCurrent = currentPage;
@@ -281,9 +301,11 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        confirmationtId: null,
+        confirmationId: null,
         activityId: null,
         userId: null,
+        userName: null,
+        activityName: null,
         enrollmentTime: null,
         result: '',
         checkIn: null,
@@ -311,18 +333,19 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.confirmationtId)
+      this.ids = selection.map(item => item.confirmationId)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
     /*审核*/
     handleAudit(row) {
       this.reset();
-      const confirmationtId = row.confirmationtId || this.ids;
+      const confirmationId = row.confirmationId || this.ids;
       const userId = row.userId;
-
-      getConfirmation(confirmationtId).then(response => {
+      getConfirmation(confirmationId).then(response => {
         this.form = response.data.data;
+        this.disabledStatus();
+        console.log(this.disabled);
         this.open = true;
         this.title = "修改活动确认";
       });
@@ -336,8 +359,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const confirmationtId = row.confirmationtId || this.ids
-      getConfirmation(confirmationtId).then(response => {
+      const confirmationId = row.confirmationId || this.ids
+      getConfirmation(confirmationId).then(response => {
         this.form = response.data.data;
         this.open = true;
         this.title = "修改活动确认";
@@ -347,7 +370,7 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.confirmationtId != null) {
+          if (this.form.confirmationId != null) {
             updateConfirmation(this.form).then(response => {
               this.$message({
                 message: '修改成功',
@@ -371,13 +394,13 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const confirmationtIds = row.confirmationtId || this.ids;
+      const confirmationIds = row.confirmationId || this.ids;
       this.$confirm('是否删除选中？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(function() {
-        return delConfirmation(confirmationtIds);
+        return delConfirmation(confirmationIds);
       }).then(() => {
         this.getList();
         this.$message({

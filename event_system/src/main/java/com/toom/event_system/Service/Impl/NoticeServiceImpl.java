@@ -43,7 +43,13 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
      */
     @Override
     public Boolean insertNotice(Notice notice) {
-        return noticeMapper.insert(notice) > 0 ? true : false;
+        QueryWrapper<Notice> wrapper = new QueryWrapper<>();
+        wrapper.eq("notice_title", notice.getNoticeTitle());
+        if (noticeMapper.selectOne(wrapper) == null) {
+            return noticeMapper.insert(notice) > 0 ? true : false;
+        } else {
+            return false;
+        }
     }
 
     /**

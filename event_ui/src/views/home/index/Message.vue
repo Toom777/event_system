@@ -1,4 +1,5 @@
 <template>
+  <!--首页公告、资讯栏-->
   <div class="x-index-section">
     <el-row :gutter="20">
       <el-col :span="12">
@@ -22,7 +23,7 @@
               :formatter="dateFormat"
               >
             <template slot="header" slot-scope="scope">
-              <a href="" target="_blank">More<<</a>
+              <a @click="handleNoticeMore">More<<</a>
             </template>
           </el-table-column>
         </el-table>
@@ -49,7 +50,7 @@
               :formatter="dateFormat"
           >
             <template slot="header" slot-scope="scope">
-              <a href="" target="_blank">More<<</a>
+              <a  @click="handleNewsMore">More<<</a>
             </template>
           </el-table-column>
         </el-table>
@@ -106,6 +107,14 @@ export default {
           noticeId: row
         }
       })
+    },
+    /*更多公告*/
+    handleNoticeMore(){
+      this.$router.push('/moreNotice')
+    },
+    /*更多资讯*/
+    handleNewsMore(){
+      this.$router.push('/moreNews')
     },
     /*日期格式化*/
     dateFormat(row, column){

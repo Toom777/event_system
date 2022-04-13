@@ -49,3 +49,5 @@ export function delActivity(activityId) {
     method: 'delete'
   })
 }
+
+

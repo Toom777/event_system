@@ -1,5 +1,7 @@
 import axios from '../request'
 
+
+
 export function userConfirmation(query) {
   return axios({
     url: '/confirmation/searchListByUser',
@@ -18,6 +20,14 @@ export function EnrollJuagement(query) {
   })
 }
 
+// 查询用户的活动报名列表
+export function listUser(query) {
+  return axios({
+    url: '/confirmation/userList',
+    method: 'get',
+    params: query
+  })
+}
 
 // 查询活动确认列表
 export function listConfirmation(query) {
@@ -29,9 +39,9 @@ export function listConfirmation(query) {
 }
 
 // 查询活动确认详细
-export function getConfirmation(confirmationtId) {
+export function getConfirmation(confirmationId) {
   return axios({
-    url: '/confirmation/selectById/' + confirmationtId,
+    url: '/confirmation/selectById/' + confirmationId,
     method: 'get'
   })
 }
@@ -55,9 +65,18 @@ export function updateConfirmation(data) {
 }
 
 // 删除活动确认
-export function delConfirmation(confirmationtId) {
+export function delConfirmation(confirmationId) {
   return axios({
-    url: '/confirmation/del/' + confirmationtId,
+    url: '/confirmation/del/' + confirmationId,
     method: 'delete'
+  })
+}
+
+//活动签到
+export function checkActivity(query) {
+  return axios({
+    url: '/confirmation/check',
+    method: 'post',
+    params: query
   })
 }

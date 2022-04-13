@@ -47,6 +47,7 @@ class EventSystemApplicationTests {
 	private ConfirmationMapper confirmationMapper;
 
 
+
 	@Test
 	void test(){
 		User user = (User) SecurityUtils.getSubject().getPrincipal();
@@ -69,8 +70,7 @@ class EventSystemApplicationTests {
 	@Test
 	void comfirmTest() {
 
-
-		System.out.println(confirmationMapper.nameList(1L));
+		System.out.println(confirmationService.getById(1006L));
 	}
 
 

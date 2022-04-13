@@ -1,5 +1,4 @@
 <template>
-  <!--首页活动栏-->
   <div class="app-container">
     <el-row :gutter="20">
       <el-col :span="24">
@@ -7,9 +6,8 @@
             :data="activityData"
             stripe>
           <el-table-column
-              prop="notice"
-              label="最新活动"
-              min-width="80%"
+              prop="activity"
+              label="活动信息"
           >
             <template slot-scope="scope">
               <el-link @click="activityPush(scope.row.activityId)">{{scope.row.activityName}}</el-link>
@@ -19,31 +17,38 @@
 
           <el-table-column
               prop="createTime"
-              min-width="8%"
               :formatter="dateFormat"
+              align="right"
+
           >
-            <template slot="header" slot-scope="scope">
-              <a @click="handleMoreActivity">More<<</a>
-            </template>
           </el-table-column>
         </el-table>
       </el-col>
 
+
     </el-row>
-
-
+    <el-pagination
+        background
+        layout="prev, pager, next"
+        :total="total"
+        :page-size="activityParams.pageSize"
+        :current-page="activityParams.pageCurrent"
+        @current-change="getPage"
+    >
+    </el-pagination>
   </div>
 </template>
 
 <script>
-import {listActivity} from '@/api/activity';
+import {listActivity} from "@/api/activity";
+
 export default {
-  name: "NewActivity",
+  name: "MoreActivity",
   data() {
     return {
-      activityData:[],
-      // 查询参数
-      queryParams: {
+      activityData: [],
+      /*资讯查询参数*/
+      activityParams: {
         pageCurrent: 1,
         pageSize: 5,
         activityName: '',
@@ -51,12 +56,11 @@ export default {
         beginTime: '',
         endTime: ''
       },
+      total: 0,
+
     }
   },
   methods: {
-    handleMoreActivity() {
-      this.$router.push('/moreActivity');
-    },
     /*日期格式化*/
     dateFormat(row, column){
       let data = row[column.property];
@@ -66,21 +70,28 @@ export default {
       let dt = new Date(data);
       return dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate();
     },
-    getActivityList(){
-      listActivity(this.queryParams).then(res => {
-        this.activityData = res.data.rows;
-      });
-    },
-    /*跳转至详情页*/
+    /*资讯跳转*/
     activityPush(row) {
       this.$router.push({
         path: '/activityContent',
         query: {
           activityId: row
         }
-      });
-
+      })
     },
+    getActivityList() {
+      listActivity(this.activityParams).then(res => {
+        console.log(res);
+        this.activityData = res.data.rows;
+        this.total = res.data.total;
+      })
+    },
+    /*获取当前点击页*/
+    getPage(currentPage){
+      this.activityParams.pageCurrent = currentPage;
+      this.getActivityList()
+    },
+
   },
   created() {
     this.getActivityList();
@@ -89,14 +100,5 @@ export default {
 </script>
 
 <style scoped>
-.app-container{
-  margin-top: 50px;
-}
-a{
-  color: #7ac804;
-}
-p{
-  margin: 0;
-  color: #b2b8bb;
-}
+
 </style>

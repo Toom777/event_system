@@ -10,6 +10,7 @@ import com.toom.event_system.Entity.PageInfo;
 import com.toom.event_system.Service.ConfirmationService;
 import com.toom.event_system.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -66,26 +67,32 @@ public class ConfirmationController extends BaseController{
     }
 
 
+
     /**
-     * 分页查询
+     * 分页查询（报名审核）
      * @param pageCurrent
      * @param pageSize
-     * @param activityId
-     * @param userId
+     * @param activityName
+     * @param userName
+     * @param result
      * @return
      */
     @GetMapping("/searchList")
     public PageInfo getSearchList(@RequestParam("pageCurrent") Integer pageCurrent,
                                   @RequestParam("pageSize") Integer pageSize,
-                                  @RequestParam("activityId") Long activityId,
-                                  @RequestParam("userId") Long userId){
+                                  @RequestParam("activityName") String activityName,
+                                  @RequestParam("userName") String userName,
+                                  @RequestParam("result") String result){
         Page<Confirmation> page = new Page<>(pageCurrent, pageSize);
         QueryWrapper<Confirmation> wrapper = new QueryWrapper<>();
-        if (activityId != null){
-            wrapper.eq("activity_id", activityId);
+        if (!"".equals(activityName)){
+            wrapper.eq("activity_name", activityName);
         }
-        if (userId != null){
-            wrapper.eq("user_id", userId);
+        if (!"".equals(userName)){
+            wrapper.eq("user_name", userName);
+        }
+        if (!"".equals(result)){
+            wrapper.eq("result", result);
         }
         confirmationService.searchConfirmationPage(page, wrapper);
         PageInfo info = new PageInfo();
@@ -96,6 +103,32 @@ public class ConfirmationController extends BaseController{
         return info;
     }
 
+
+    @GetMapping("/userList")
+    public PageInfo getUserSearchList(@RequestParam("pageCurrent") Integer pageCurrent,
+                                  @RequestParam("pageSize") Integer pageSize,
+                                  @RequestParam("activityName") String activityName,
+                                  @RequestParam("userId") Long userId,
+                                  @RequestParam("result") String result){
+        Page<Confirmation> page = new Page<>(pageCurrent, pageSize);
+        QueryWrapper<Confirmation> wrapper = new QueryWrapper<>();
+        if (!"".equals(activityName)){
+            wrapper.eq("activity_name", activityName);
+        }
+        if (userId != null){
+            wrapper.eq("user_id", userId);
+        }
+        if (!"".equals(result)){
+            wrapper.eq("result", result);
+        }
+        confirmationService.searchConfirmationPage(page, wrapper);
+        PageInfo info = new PageInfo();
+        info.setPageCurrent(pageCurrent);
+        info.setPageSize(pageSize);
+        info.setTotal(page.getTotal());
+        info.setRows(page.getRecords());
+        return info;
+    }
 
     /**
      * 通过活动Id查找用户ID
@@ -144,6 +177,28 @@ public class ConfirmationController extends BaseController{
     @DeleteMapping("/del/{confirmationIds}")
     public Result removeConfirmation(@PathVariable Long[] confirmationIds){
         return toAjax(confirmationService.deleteConfirmationByIds(confirmationIds));
+    }
+
+    /**
+     * 活动签到
+     * @param confirmationId
+     * @param checkTime
+     * @return
+     */
+    @RequestMapping("/check")
+    public Result checkConfirmation(@RequestParam("confirmationId") Long confirmationId,
+                                    @RequestParam("checkTime")@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss") LocalDateTime checkTime) {
+        Confirmation confirmation = confirmationService.getById(confirmationId);
+        if (confirmation != null) {
+            if (confirmation.getCheckIn() == null) {
+                confirmation.setCheckIn(checkTime);
+            } else if (confirmation.getCheckIn() != null && confirmation.getCheckOut() == null) {
+                confirmation.setCheckOut(checkTime);
+            }
+            return toAjax(confirmationService.updateConfirmation(confirmation));
+        } else {
+            return toAjax(false);
+        }
     }
 
 }

@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="活动ID" prop="activityId">
+      <el-form-item label="活动名称" prop="activityName">
         <el-input
-            v-model="queryParams.activityId"
-            placeholder="请输入活动ID"
+            v-model="queryParams.activityName"
+            placeholder="请输入活动名称"
             clearable
             size="small"
             @keyup.enter.native="handleQuery"
@@ -12,17 +12,20 @@
       </el-form-item>
 
       <el-form-item label="审核结果" prop="result">
-        <el-input
-            v-model="queryParams.result"
-            placeholder="请输入审核结果"
-            clearable
-            size="small"
-            @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.result" placeholder="请选择">
+          <el-option
+              v-for="item in resultList"
+              :key="item.result"
+              :label="item.resultName"
+              :value="item.result"
+              @keyup.enter.native="handleQuery"
+          >
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetForm('searchForm')">重置</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetForm('queryForm')">重置</el-button>
       </el-form-item>
     </el-form>
 
@@ -30,6 +33,7 @@
     <el-table v-loading="loading" :data="confirmationList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="活动ID" align="center" prop="activityId" />
+      <el-table-column label="活动名称" align="center" prop="activityName" />
       <el-table-column label="报名时间" align="center" prop="enrollmentTime" width="180">
         <template slot-scope="scope">
           <span>{{ scope.row.enrollmentTime }}</span>
@@ -63,7 +67,7 @@
               size="mini"
               type="text"
               icon="el-icon-delete"
-              @click="handleDelete(scope.row)"
+              @click="handleCheck(scope.row)"
           >签到</el-button>
         </template>
       </el-table-column>
@@ -100,10 +104,10 @@
 
 <script>
 import {
-  addConfirmation,
+  addConfirmation, checkActivity,
   delConfirmation,
   getConfirmation,
-  listConfirmation,
+  listConfirmation, listUser,
   updateConfirmation
 } from "@/api/confirmation";
 import {getActivity} from "@/api/activity";
@@ -135,12 +139,25 @@ export default {
         pageCurrent: 1,
         pageSize: 10,
         userId: this.$route.query.userId,
-        activityId: '',
+        activityName: '',
         result: ''
       },
       // 表单参数
       form: {},
 
+      resultList: [{
+        result: '0',
+        resultName: '待审核'
+      }, {
+        result: '1',
+        resultName: '通过'
+      }, {
+        result: '2',
+        resultName: '不通过'
+      }],
+
+      /*签到表单参数*/
+      checkForm: {},
       // 表单校验
       rules: {
         activityId: [
@@ -154,16 +171,29 @@ export default {
     }
   },
   methods: {
+    /*日期格式转化*/
+    dateFotmat(time){
+      var date=new Date(time);
+      var year=date.getFullYear();
+      /* 在日期格式中，月份是从0开始的，因此要加0
+       * 使用三元表达式在小于10的前面加0，以达到格式统一  如 09:11:05
+       * */
+      var month= date.getMonth()+1<10 ? "0"+(date.getMonth()+1) : date.getMonth()+1;
+      var day=date.getDate()<10 ? "0"+date.getDate() : date.getDate();
+      var hours=date.getHours()<10 ? "0"+date.getHours() : date.getHours();
+      var minutes=date.getMinutes()<10 ? "0"+date.getMinutes() : date.getMinutes();
+      var seconds=date.getSeconds()<10 ? "0"+date.getSeconds() : date.getSeconds();
+      // 拼接
+      return year+"-"+month+"-"+day+" "+hours+":"+minutes+":"+seconds;
+    },
     /*查看*/
     handleSearch(row){
       this.reset();
-      const collectionId = row.collectionId || this.ids;
       const activityId = row.activityId;
       getActivity(activityId).then(response => {
         console.log("115151", response);
         this.form = response.data.data;
         this.open = true;
-        this.title = "修改活动收藏";
       });
     },
     /*获取当前点击页*/
@@ -194,7 +224,7 @@ export default {
     /** 查询活动确认列表 */
     getList() {
       this.loading = true;
-      listConfirmation(this.queryParams).then(response => {
+      listUser(this.queryParams).then(response => {
         this.confirmationList = response.data.rows;
         this.total = response.data.total;
         this.loading = false;
@@ -208,7 +238,7 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        confirmationtId: null,
+        confirmationId: null,
         activityId: null,
         userId: null,
         enrollmentTime: null,
@@ -238,7 +268,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.confirmationtId)
+      this.ids = selection.map(item => item.confirmationId)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -255,9 +285,42 @@ export default {
     submitForm() {
 
     },
-    /** 删除按钮操作 */
-    handleDelete(row) {
+    /** 签到按钮操作 */
+    handleCheck(row) {
+      if (row.result == 0){
+        this.$message({
+          message: '活动待审核，不能签到！',
+          type: 'warning'
+        });
+      } else if (row.result == 2) {
+        this.$message({
+          message: '活动不通过，不能签到！',
+          type: 'error'
+        });
+      } else {
+        if (row.checkIn != null && row.checkOut != null){
+          this.$message({
+            message: '不能反复签到！',
+            type: 'warning'
+          });
+        } else {
+          this.checkForm.checkTime = this.dateFotmat(new Date());
+          this.checkForm.confirmationId = row.confirmationId;
+          checkActivity(this.checkForm).then(() => {
+            this.$message({
+              message: '签到成功！当前签到时间为：' + this.checkForm.checkTime,
+              type: 'success'
+            });
+            this.getList();
+          }).catch(() => {
+            console.log("失败了");
+          });
 
+
+        }
+
+      }
+      this.getList();
     },
   },
   created() {

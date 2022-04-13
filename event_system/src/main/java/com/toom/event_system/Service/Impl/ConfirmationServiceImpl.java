@@ -3,10 +3,9 @@ package com.toom.event_system.Service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.toom.event_system.Entity.Community;
+import com.toom.event_system.Entity.*;
 import com.toom.event_system.Entity.Confirmation;
-import com.toom.event_system.Entity.Confirmation;
-import com.toom.event_system.Entity.User;
+import com.toom.event_system.Mapper.ActivityMapper;
 import com.toom.event_system.Mapper.ConfirmationMapper;
 import com.toom.event_system.Service.ConfirmationService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -27,6 +26,8 @@ public class ConfirmationServiceImpl extends ServiceImpl<ConfirmationMapper, Con
     @Autowired
     private ConfirmationMapper confirmationMapper;
 
+    @Autowired
+    private ActivityMapper activityMapper;
 
     /**
      * 新增活动确认
@@ -36,7 +37,17 @@ public class ConfirmationServiceImpl extends ServiceImpl<ConfirmationMapper, Con
     @Override
     public Boolean insertConfirmation(Confirmation confirmation) {
         int row = confirmationMapper.insert(confirmation);
-        return row > 0 ? true : false;
+        if (row > 0) {
+            Activity activity = activityMapper.selectById(confirmation.getActivityId());
+            int count = activity.getConfirmCount();
+            if (count < activity.getAllowCount()) {
+                activity.setConfirmCount(++count);
+                activityMapper.updateById(activity);
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
