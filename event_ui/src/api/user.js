@@ -35,6 +35,14 @@ export function getUser(userId) {
   })
 }
 
+//个人信息查看
+export function getUserInformation(userId) {
+  return axios({
+    url: '/user/selectUser/' + userId,
+    method: 'get'
+  })
+}
+
 // 新增用户
 export function addUser(data) {
   return axios({

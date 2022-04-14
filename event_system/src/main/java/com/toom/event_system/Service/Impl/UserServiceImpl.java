@@ -67,6 +67,31 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     /**
+     * 个人信息查看
+     * @param userId
+     * @return
+     */
+    @Override
+    public User selectUser(Long userId) {
+        User user = userMapper.selectById(userId);
+        /** 星级评定 根据时长定*/
+        if (user.getHours() < 20L) {
+            user.setSating(1L);
+        } else if (user.getHours() < 60L) {
+            user.setSating(2L);
+        } else if (user.getHours() < 100L) {
+            user.setSating(3L);
+        } else if (user.getHours() < 200L) {
+            user.setSating(4L);
+        } else {
+            user.setSating(5L);
+        }
+        System.out.println(user.getHours());
+        System.out.println(user.getSating());
+        return user;
+    }
+
+    /**
      * 新增用户
      * @param user
      * @return

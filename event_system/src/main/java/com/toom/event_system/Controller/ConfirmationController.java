@@ -94,6 +94,7 @@ public class ConfirmationController extends BaseController{
         if (!"".equals(result)){
             wrapper.eq("result", result);
         }
+        wrapper.orderByDesc("confirmation_id");
         confirmationService.searchConfirmationPage(page, wrapper);
         PageInfo info = new PageInfo();
         info.setPageCurrent(pageCurrent);
@@ -200,5 +201,16 @@ public class ConfirmationController extends BaseController{
             return toAjax(false);
         }
     }
+
+    /**
+     * 给予服务时长and积分
+     */
+    @RequestMapping("/score")
+    public Result scoreHoursPoint(@RequestBody Confirmation confirmation) {
+
+
+        return toAjax(confirmationService.updateUserHoursPoint(confirmation));
+    }
+
 
 }

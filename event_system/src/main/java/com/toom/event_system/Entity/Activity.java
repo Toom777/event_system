@@ -73,12 +73,12 @@ public class Activity extends BaseEntity {
     private String contactPhone;
 
     @ApiModelProperty("活动地点")
-    @TableField("activitiy_location")
-    private String activitiyLocation;
+    @TableField("activity_location")
+    private String activityLocation;
 
     @ApiModelProperty("活动积分")
-    @TableField("activitiy_point")
-    private Integer activitiyPoint;
+    @TableField("activity_point")
+    private Integer activityPoint;
 
     @ApiModelProperty("图片")
     @TableField("picture")

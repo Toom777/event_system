@@ -41,7 +41,7 @@
               <li class="list-group-item"><table><tbody><tr><td>活动时间</td><td>{{activity.beginTime}} ~ {{activity.endTime}}</td></tr></tbody></table></li>
               <li class="list-group-item"><table><tbody><tr><td>报名人数</td><td>{{activity.confirmCount}} / {{activity.allowCount}}</td></tr></tbody></table></li>
               <li class="list-group-item"><table><tbody><tr><td>截止报名</td><td>{{activity.deadline}}</td></tr></tbody></table></li>
-              <li class="list-group-item"><table><tbody><tr><td>活动地点</td><td><span>{{activity.activitiyLocation}}</span></td></tr></tbody></table></li>
+              <li class="list-group-item"><table><tbody><tr><td>活动地点</td><td><span>{{activity.activityLocation}}</span></td></tr></tbody></table></li>
               <li class="list-group-item"><table><tbody><tr><td>联系人&emsp;</td><td>{{activity.contactName}}</td></tr></tbody></table></li>
               <li class="list-group-item"><table><tbody><tr><td>联系电话</td><td>{{activity.contactPhone}}</td></tr></tbody></table></li>
               <li class="list-group-item"><table><tbody><tr><td>活动内容</td><td>{{activity.activityContent}}</td></tr></tbody></table></li>

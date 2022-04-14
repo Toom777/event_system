@@ -13,7 +13,7 @@
           >
             <template slot-scope="scope">
               <el-link @click="activityPush(scope.row.activityId)">{{scope.row.activityName}}</el-link>
-              <p>地点：{{scope.row.activitiyLocation}}</p>
+              <p>地点：{{scope.row.activityLocation}}</p>
             </template>
           </el-table-column>
 

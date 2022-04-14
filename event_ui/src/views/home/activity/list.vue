@@ -104,7 +104,7 @@
       </el-table-column>
 <!--      <el-table-column label="联系人" align="center" prop="contactName" />
       <el-table-column label="联系电话" align="center" prop="contactPhone" />-->
-      <el-table-column label="活动积分" align="center" prop="activitiyPoint" />
+      <el-table-column label="活动积分" align="center" prop="activityPoint" />
 <!--      <el-table-column label="图片" align="center" prop="picture" />-->
       <el-table-column label="活动开始时间" align="center" prop="beginTime" width="180">
         <template slot-scope="scope">
@@ -169,8 +169,8 @@
 
         <el-row>
           <el-col :span="12">
-            <el-form-item label="活动地点" prop="activitiyLocation">
-              <el-input v-model="form.activitiyLocation" placeholder="请输入活动地点" />
+            <el-form-item label="活动地点" prop="activityLocation">
+              <el-input v-model="form.activityLocation" placeholder="请输入活动地点" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -245,8 +245,8 @@
 
         <el-row>
           <el-col :span="12">
-            <el-form-item label="活动积分" prop="activitiyPoint">
-              <el-input v-model="form.activitiyPoint" placeholder="请输入活动积分" />
+            <el-form-item label="活动积分" prop="activityPoint">
+              <el-input v-model="form.activityPoint" placeholder="请输入活动积分" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -457,8 +457,8 @@ export default {
         deadline: undefined,
         contactName: undefined,
         contactPhone: undefined,
-        activitiyLocation: undefined,
-        activitiyPoint: undefined,
+        activityLocation: undefined,
+        activityPoint: undefined,
         picture: undefined,
         beginTime: undefined,
         endTime: undefined,
@@ -525,6 +525,7 @@ export default {
               this.getList();
             });
           } else {
+            this.form.userId = this.$store.getters.getUser.userId;
             addActivity(this.form).then(response => {
               this.$message({
                 message: '活动创建成功！',

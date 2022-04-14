@@ -53,4 +53,9 @@ public interface ConfirmationService extends IService<Confirmation> {
      * @return
      */
     public Confirmation searchConfirmationById(Long confirmationId);
+
+    /**
+     * 更新用户活动后的服务时长和积分
+     */
+    public Boolean updateUserHoursPoint(Confirmation confirmation);
 }

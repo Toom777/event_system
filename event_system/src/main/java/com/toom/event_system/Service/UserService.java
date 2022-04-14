@@ -33,6 +33,13 @@ public interface UserService extends IService<User> {
     public User selectUserById(Long userId);
 
     /**
+     * 个人信息查看
+     * @param userId
+     * @return
+     */
+    public User selectUser(Long userId);
+
+    /**
      * 新增用户
      * @param user
      * @return

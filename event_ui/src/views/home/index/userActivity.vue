@@ -93,7 +93,7 @@
         <li class="list-group-item"><table><tbody><tr><td>活动时间</td><td>{{form.beginTime}} ~ {{form.endTime}}</td></tr></tbody></table></li>
         <li class="list-group-item"><table><tbody><tr><td>报名人数</td><td>{{form.confirmCount}} / {{form.allowCount}}</td></tr></tbody></table></li>
         <li class="list-group-item"><table><tbody><tr><td>截止报名</td><td>{{form.deadline}}</td></tr></tbody></table></li>
-        <li class="list-group-item"><table><tbody><tr><td>活动地点</td><td><span>{{form.activitiyLocation}}</span></td></tr></tbody></table></li>
+        <li class="list-group-item"><table><tbody><tr><td>活动地点</td><td><span>{{form.activityLocation}}</span></td></tr></tbody></table></li>
         <li class="list-group-item"><table><tbody><tr><td>联系人&emsp;</td><td>{{form.contactName}}</td></tr></tbody></table></li>
         <li class="list-group-item"><table><tbody><tr><td>联系电话</td><td>{{form.contactPhone}}</td></tr></tbody></table></li>
         <li class="list-group-item"><table><tbody><tr><td>活动内容</td><td>{{form.activityContent}}</td></tr></tbody></table></li>
@@ -298,26 +298,36 @@ export default {
           type: 'error'
         });
       } else {
-        if (row.checkIn != null && row.checkOut != null){
-          this.$message({
-            message: '不能反复签到！',
-            type: 'warning'
-          });
-        } else {
-          this.checkForm.checkTime = this.dateFotmat(new Date());
-          this.checkForm.confirmationId = row.confirmationId;
-          checkActivity(this.checkForm).then(() => {
+
+        getActivity(row.activityId).then(res => {
+          this.form = res.data.data;
+          if (this.form.beginTime < this.dateFotmat(new Date()) && this.form.endTime > this.dateFotmat(new Date())) {
+
+            if (row.checkIn != null && row.checkOut != null){
+              this.$message({
+                message: '不能反复签到！',
+                type: 'warning'
+              });
+            } else {
+              this.checkForm.checkTime = this.dateFotmat(new Date());
+              this.checkForm.confirmationId = row.confirmationId;
+              checkActivity(this.checkForm).then(() => {
+                this.$message({
+                  message: '签到成功！当前签到时间为：' + this.checkForm.checkTime,
+                  type: 'success'
+                });
+                this.getList();
+              }).catch(() => {
+                console.log("失败了");
+              });
+            }
+          } else if (this.form.beginTime > this.dateFotmat(new Date())) {
             this.$message({
-              message: '签到成功！当前签到时间为：' + this.checkForm.checkTime,
-              type: 'success'
+              message: '还未到签到时间！',
+              type: 'error'
             });
-            this.getList();
-          }).catch(() => {
-            console.log("失败了");
-          });
-
-
-        }
+          }
+        });
 
       }
       this.getList();

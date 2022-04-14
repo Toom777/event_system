@@ -121,6 +121,16 @@ public class UserController extends BaseController{
         return Result.success(userService.selectUserById(userId));
     }
 
+    /**
+     * 个人信息
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/selectUser/{userId}")
+    public Result selectUser(@PathVariable Long userId) {
+        return Result.success(userService.selectUser(userId));
+    }
+
 
     /**
      * 新增用户

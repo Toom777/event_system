@@ -36,24 +36,24 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-<!--      <el-col :span="1.5">
+      <el-col :span="1.5">
         <el-button
             type="primary"
             plain
-            icon="el-icon-plus"
+            icon="el-icon-s-check"
             size="mini"
             @click="handleAdd"
-        >新增</el-button>
-      </el-col>-->
+        >确认</el-button>
+      </el-col>
       <el-col :span="1.5">
         <el-button
             type="success"
             plain
-            icon="el-icon-edit"
+            icon="el-icon-check"
             size="mini"
             :disabled="single"
             @click="handleUpdate"
-        >修改</el-button>
+        >审核</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -141,7 +141,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="审核结果" prop="result">
-          <el-select v-model="form.result" placeholder="请选择"  :disabled="disabled">
+          <el-select v-model="form.result" placeholder="请选择"  :disabled="mydisabled">
             <el-option
                 v-for="item in resultList"
                 :key="item.result"
@@ -217,7 +217,7 @@ export default {
       form: {},
 
       /*不可使用*/
-      disabled: false,
+      mydisabled: true,
 
       userForm: {},
       // 表单校验
@@ -245,10 +245,10 @@ export default {
   methods: {
     /*审核时效*/
     disabledStatus() {
-      if (this.form.checkIn != null) {
-        this.disabled = true;
+      if (this.form.checkIn != null || this.form.result === "2") {
+        this.mydisabled = true;
       } else {
-        this.disabled = false;
+        this.mydisabled = false;
       }
     },
     /*获取当前点击页*/
@@ -345,16 +345,13 @@ export default {
       getConfirmation(confirmationId).then(response => {
         this.form = response.data.data;
         this.disabledStatus();
-        console.log(this.disabled);
         this.open = true;
-        this.title = "修改活动确认";
       });
     },
-    /** 新增按钮操作 */
+    /** 活动结束确认按钮操作 */
     handleAdd() {
       this.reset();
-      this.open = true;
-      this.title = "添加活动确认";
+
     },
     /** 修改按钮操作 */
     handleUpdate(row) {

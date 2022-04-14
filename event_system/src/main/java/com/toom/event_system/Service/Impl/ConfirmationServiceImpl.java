@@ -7,11 +7,13 @@ import com.toom.event_system.Entity.*;
 import com.toom.event_system.Entity.Confirmation;
 import com.toom.event_system.Mapper.ActivityMapper;
 import com.toom.event_system.Mapper.ConfirmationMapper;
+import com.toom.event_system.Mapper.UserMapper;
 import com.toom.event_system.Service.ConfirmationService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +30,9 @@ public class ConfirmationServiceImpl extends ServiceImpl<ConfirmationMapper, Con
 
     @Autowired
     private ActivityMapper activityMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     /**
      * 新增活动确认
@@ -56,7 +61,21 @@ public class ConfirmationServiceImpl extends ServiceImpl<ConfirmationMapper, Con
     @Override
     public Boolean updateConfirmation(Confirmation confirmation) {
         confirmation.setUpdateTime(new Date());
-        return confirmationMapper.updateById(confirmation) > 0 ? true : false;
+        int row = confirmationMapper.updateById(confirmation);
+        if (row > 0) {
+            if ("2".equals(confirmation.getResult())) {
+                Activity activity = activityMapper.selectById(confirmation.getActivityId());
+                int count = activity.getConfirmCount();
+                if (count > 0) {
+                    activity.setConfirmCount(--count);
+                    activityMapper.updateById(activity);
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     /**
@@ -100,5 +119,32 @@ public class ConfirmationServiceImpl extends ServiceImpl<ConfirmationMapper, Con
     @Override
     public Confirmation searchConfirmationById(Long confirmationId) {
         return confirmationMapper.selectById(confirmationId);
+    }
+
+    /**
+     * 更新用户活动后的服务时长和积分
+     */
+    @Override
+    public Boolean updateUserHoursPoint(Confirmation confirmation) {
+        if ("0".equals(confirmation.getTag())) {
+            Activity activity = activityMapper.selectById(confirmation.getActivityId());
+            User user = userMapper.selectById(confirmation.getUserId());
+            /*获取相应活动积分*/
+            int piont = activity.getActivityPoint();
+
+            int minutes = (int) Duration.between(confirmation.getCheckIn(), confirmation.getCheckOut()).toMinutes();
+            int hours = minutes / 60;
+            int remainder = minutes % 60;
+            if (remainder > 30) {
+                hours++;
+            }
+            user.setHours(user.getHours() + hours);
+            user.setPoints(user.getPoints() + piont);
+            confirmation.setTag("1");
+            userMapper.updateById(user);
+            confirmationMapper.updateById(confirmation);
+            return true;
+        }
+        return false;
     }
 }

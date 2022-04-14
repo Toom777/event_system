@@ -18,7 +18,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="活动地点">
-            <el-input v-model="form.activitiyLocation" placeholder="请输入活动地点" />
+            <el-input v-model="form.activityLocation" placeholder="请输入活动地点" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -93,8 +93,8 @@
 
       <el-row>
         <el-col :span="12">
-          <el-form-item label="活动积分" prop="activitiyPoint">
-            <el-input v-model="form.activitiyPoint" placeholder="请输入活动积分" />
+          <el-form-item label="活动积分" prop="activityPoint">
+            <el-input v-model="form.activityPoint" placeholder="请输入活动积分" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -148,6 +148,8 @@
 
 <script>
 
+import {addActivity} from "@/api/activity";
+
 export default {
   name: "release",
   data() {
@@ -159,7 +161,7 @@ export default {
       form: {
         activityName: undefined,
         activityTag: '其他',
-        activitiyLocation: undefined,
+        activityLocation: undefined,
         requirement: '无',
         contactName: undefined,
         contactPhone: undefined,
@@ -167,10 +169,11 @@ export default {
         endTime: null,
         deadline: null,
         remark: undefined,
-        activitiyPoint: 10,
+        activityPoint: 10,
         allowCount: 1,
         picture: null,
         activityContent: undefined,
+        userId: null
       },
       rules: {
         activityName: [{
@@ -183,7 +186,7 @@ export default {
           message: '请输入活动标签',
           trigger: 'blur'
         }],
-        activitiyLocation: [],
+        activityLocation: [],
         requirement: [],
         contactName: [],
         contactPhone: [],
@@ -212,7 +215,8 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           this.submitUpload();
-          this.axios.post("http://localhost:8888/activity/insert",this.form).then(response => {
+          this.form.userId = this.$store.getters.getUser.userId;
+          addActivity(this.form).then(response => {
               this.$message({
                 message: '活动创建成功！',
                 type: 'success'

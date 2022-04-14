@@ -66,5 +66,8 @@ public class Confirmation extends BaseEntity {
     @TableField("check_out")
     private LocalDateTime checkOut;
 
+    @ApiModelProperty("是否已经加分（0否 1是）")
+    @TableField("tag")
+    private String tag;
 
 }

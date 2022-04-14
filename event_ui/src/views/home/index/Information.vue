@@ -115,7 +115,7 @@
 </template>
 
 <script>
-import {communityIdAndName, getUser, updateUser} from '@/api/user';
+import {communityIdAndName, getUser, getUserInformation, updateUser} from '@/api/user';
 import confirmation from "@/views/home/activity/confirmation";
 export default {
   name: "Information",
@@ -171,7 +171,7 @@ export default {
       })
     },
     getUser() {
-      getUser(this.$route.query.userId).then(res => {
+      getUserInformation(this.$route.query.userId).then(res => {
         this.user = res.data.data;
         console.log(res);
       })
