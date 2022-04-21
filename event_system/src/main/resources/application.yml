@@ -58,5 +58,12 @@ mybatis-plus:
   # XML路径
   mapper-locations: classpath*:/mapper/**Mapper.xml
 
-
-
+#七牛云配置
+qiniu:
+  #密钥
+  accessKey: ay5lfqTquarPNQ255CXUHsTO_jrp164pYS76Y-_h
+  secretKey: qpbX6wyWT-Cfm_o92_8uEguZtLveyvRLmqQAfDuS
+  #空间名
+  bucket: event-system
+  #域名
+  domain: ra7ut4c5u.hn-bkt.clouddn.com

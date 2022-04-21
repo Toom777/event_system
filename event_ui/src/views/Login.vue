@@ -40,7 +40,7 @@
 
 
       <!--登录按钮-->
-      <el-form-item style="width:100%;">
+      <el-form-item style="text-align: center">
         <el-button type="primary" @click="submitForm()"  :loading="loading">
           <span v-if="!loading">登 录</span>
           <span v-else>登 录 中...</span>
@@ -134,8 +134,11 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style>
+.login .el-form-item .el-form-item__content{
+  margin-left: 55px !important;
+  margin-right: 55px;
+}
 .login{
   display: flex;
   justify-content: center;
@@ -148,6 +151,7 @@ export default {
   text-align: center;
   color: #707070;
 }
+
 .login-form {
   border-radius: 15px;
   background-clip: padding-box;
@@ -157,6 +161,7 @@ export default {
   width: 400px;
   padding: 25px 25px 5px 25px;
 }
+
 .el-input {
   height: 38px;
 }
@@ -173,7 +178,7 @@ export default {
   letter-spacing: 1px;
 }
 .login-code {
-  width: 33%;
+
   height: 38px;
   float: right;
 }

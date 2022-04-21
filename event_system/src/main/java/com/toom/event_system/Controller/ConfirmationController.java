@@ -86,10 +86,10 @@ public class ConfirmationController extends BaseController{
         Page<Confirmation> page = new Page<>(pageCurrent, pageSize);
         QueryWrapper<Confirmation> wrapper = new QueryWrapper<>();
         if (!"".equals(activityName)){
-            wrapper.eq("activity_name", activityName);
+            wrapper.like("activity_name", activityName);
         }
         if (!"".equals(userName)){
-            wrapper.eq("user_name", userName);
+            wrapper.like("user_name", userName);
         }
         if (!"".equals(result)){
             wrapper.eq("result", result);
@@ -105,6 +105,15 @@ public class ConfirmationController extends BaseController{
     }
 
 
+    /**
+     * 个人活动
+     * @param pageCurrent
+     * @param pageSize
+     * @param activityName
+     * @param userId
+     * @param result
+     * @return
+     */
     @GetMapping("/userList")
     public PageInfo getUserSearchList(@RequestParam("pageCurrent") Integer pageCurrent,
                                   @RequestParam("pageSize") Integer pageSize,
@@ -114,7 +123,7 @@ public class ConfirmationController extends BaseController{
         Page<Confirmation> page = new Page<>(pageCurrent, pageSize);
         QueryWrapper<Confirmation> wrapper = new QueryWrapper<>();
         if (!"".equals(activityName)){
-            wrapper.eq("activity_name", activityName);
+            wrapper.like("activity_name", activityName);
         }
         if (userId != null){
             wrapper.eq("user_id", userId);
@@ -205,12 +214,8 @@ public class ConfirmationController extends BaseController{
     /**
      * 给予服务时长and积分
      */
-    @RequestMapping("/score")
-    public Result scoreHoursPoint(@RequestBody Confirmation confirmation) {
-
-
-        return toAjax(confirmationService.updateUserHoursPoint(confirmation));
+    @RequestMapping("/score/{confirmationIds}")
+    public Result scoreHoursPoint(@PathVariable Long[] confirmationIds) {
+        return toAjax(confirmationService.updateUserHoursPointByIds(confirmationIds));
     }
-
-
 }

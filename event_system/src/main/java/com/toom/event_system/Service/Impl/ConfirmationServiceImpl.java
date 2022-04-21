@@ -125,7 +125,8 @@ public class ConfirmationServiceImpl extends ServiceImpl<ConfirmationMapper, Con
      * 更新用户活动后的服务时长和积分
      */
     @Override
-    public Boolean updateUserHoursPoint(Confirmation confirmation) {
+    public Boolean updateUserHoursPoint(Long confirmationId) {
+        Confirmation confirmation = confirmationMapper.selectById(confirmationId);
         if ("0".equals(confirmation.getTag())) {
             Activity activity = activityMapper.selectById(confirmation.getActivityId());
             User user = userMapper.selectById(confirmation.getUserId());
@@ -146,5 +147,16 @@ public class ConfirmationServiceImpl extends ServiceImpl<ConfirmationMapper, Con
             return true;
         }
         return false;
+    }
+
+    /**
+     * 批量更新积分时长
+     */
+    @Override
+    public Boolean updateUserHoursPointByIds(Long[] confirmationIds) {
+        for (long id : confirmationIds) {
+            updateUserHoursPoint(id);
+        }
+        return true;
     }
 }

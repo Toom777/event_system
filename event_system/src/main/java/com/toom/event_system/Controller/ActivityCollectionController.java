@@ -118,8 +118,7 @@ public class ActivityCollectionController  extends BaseController{
         Map<String, Long> map = new HashMap<>();
         map.put("user_id", userId);
         map.put("activity_id", activityId);
-        wrapper.allEq(map);
-
+        wrapper.allEq(map); 
         return toAjax(activityCollectionService.remove(wrapper));
     }
 }

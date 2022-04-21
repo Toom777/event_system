@@ -30,7 +30,7 @@ export default {
             if (val !== 'home') {
                 state.currentMenu = val
 /*                console.log("加工后的state:", state);*/
-                const result = state.tabsList.findIndex(item => item.name === val.name)
+                const result = state.tabsList.findIndex(item => item.name === val)
                 if (result === -1) {
                     state.tabsList.push(val)
                 }

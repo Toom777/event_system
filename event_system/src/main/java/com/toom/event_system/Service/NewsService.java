@@ -56,4 +56,24 @@ public interface NewsService extends IService<News> {
      * @return
      */
     public List<Map<String, Object>> selectNewsType();
+
+    /**
+     * 选作轮播图
+     * @param newsIds
+     * @return
+     */
+    public Boolean carouselNewsByIds(Long[]newsIds);
+
+    /**
+     * 所有被选为轮播图的资讯
+     * @return
+     */
+    public List<News> selectCarouselList();
+
+    /**
+     * 剔除作为轮播图的资格
+     * @param newsIds
+     * @return
+     */
+    public Boolean deleteCarouselByIds(Long[] newsIds);
 }

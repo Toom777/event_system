@@ -256,7 +256,7 @@
                   class="upload-demo"
                   ref="upload"
                   :data="form"
-                  action="http://localhost:8888/upload/uploadPicture"
+                  action="http://localhost:8888/upload/upload"
                   accept="image/jpeg,image/png,image/jpg"
                   :on-preview="handlePreview"
                   :on-remove="handleRemove"

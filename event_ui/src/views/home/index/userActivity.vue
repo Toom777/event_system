@@ -301,8 +301,9 @@ export default {
 
         getActivity(row.activityId).then(res => {
           this.form = res.data.data;
-          if (this.form.beginTime < this.dateFotmat(new Date()) && this.form.endTime > this.dateFotmat(new Date())) {
 
+          if (this.form.beginTime < this.dateFotmat(new Date()) && this.form.endTime > this.dateFotmat(new Date())) {
+            console.log("进入第二层：", row);
             if (row.checkIn != null && row.checkOut != null){
               this.$message({
                 message: '不能反复签到！',
@@ -324,6 +325,11 @@ export default {
           } else if (this.form.beginTime > this.dateFotmat(new Date())) {
             this.$message({
               message: '还未到签到时间！',
+              type: 'error'
+            });
+          } else if (this.form.beginTime < this.dateFotmat(new Date())){
+            this.$message({
+              message: '活动已结束！',
               type: 'error'
             });
           }

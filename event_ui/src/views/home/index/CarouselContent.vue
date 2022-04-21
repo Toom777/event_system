@@ -12,17 +12,31 @@
 </template>
 
 <script>
+import {listCarouselNews} from "@/api/news";
+
 export default {
   name: "CarouselContent",
   data() {
     return {
-      imgList: [
-          "https://www.sva.org.cn/images/bg.jpg",
-          "https://www.sva.org.cn/images/bg.jpg",
-          "https://www.sva.org.cn/images/bg.jpg",
-          "https://www.sva.org.cn/images/bg.jpg"
-      ]
+      imgList: [],
+      carouserlList: []
     }
+  },
+  methods: {
+    getNewsImg() {
+      listCarouselNews().then(res => {
+
+        this.carouserlList = res.data.data;
+
+        for (let i = 0; i < this.carouserlList.length; i++) {
+          this.imgList.push(this.carouserlList[i].picture);
+        }
+
+      });
+    }
+  },
+  created() {
+    this.getNewsImg();
   }
 }
 </script>

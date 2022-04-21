@@ -165,12 +165,7 @@ const routes = [
           }
         ]
       },
-        /*留言*/
-      {
-        path: '/message',
-        name: 'Message',
-        component:() => import('../views/home/message/index')
-      }
+
 
     ]
   }

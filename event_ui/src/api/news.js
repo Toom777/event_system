@@ -50,3 +50,27 @@ export function delNews(newsId) {
     method: 'delete'
   })
 }
+
+// 做为轮播图
+export function carouselNews(newsId) {
+  return axios({
+    url: '/news/addCarousel/' + newsId,
+    method: 'put'
+  })
+}
+
+// 搜索作为轮播图的资讯
+export function listCarouselNews() {
+  return axios({
+    url: '/news/carouselList',
+    method: 'get'
+  })
+}
+
+//消除作为轮播图的资格
+export function delCarousel(newsId) {
+  return axios({
+    url: '/news/delCarousel/' + newsId,
+    method: 'delete'
+  })
+}

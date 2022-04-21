@@ -43,7 +43,6 @@ export default {
     getNews() {
       getNews(this.$route.query.newsId).then(res => {
         this.news = res.data.data;
-
       })
     }
   },

@@ -83,6 +83,7 @@ export default {
       })
     },
     saveActive(val) {
+      console.log(val);
       localStorage.setItem("active", val);
       this.MenuActive = val;
       this.$store.dispatch("selectMenu", val);

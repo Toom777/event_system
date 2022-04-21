@@ -32,7 +32,6 @@ public class PageInfo implements Serializable {
 
     public PageInfo(){}
 
-
     public PageInfo(List<?> list, int total){
         this.rows = list;
         this.total = total;

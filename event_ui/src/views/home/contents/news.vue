@@ -122,8 +122,8 @@
         <el-form-item label="资讯内容">
           <quill-editor v-model="form.newsContent" :min-height="192"></quill-editor>
         </el-form-item>
-<!--        <el-form-item label="图片" prop="picture">
-          <el-input v-model="form.picture" placeholder="请输入图片" />
+<!--        <el-form-item label="类型" prop="newsType">
+          <el-input v-model="form.newsType" placeholder="" />
         </el-form-item>-->
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
@@ -298,7 +298,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const newsIds = row.newsId || this.ids;
-      this.$modal.confirm('是否确认删除资讯编号为"' + newsIds + '"的数据项？').then(function() {
+      this.$confirm('是否确认删除资讯编号为"' + newsIds + '"的数据项？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(function () {
         return delNews(newsIds);
       }).then(() => {
         this.getNewsType();

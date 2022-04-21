@@ -57,5 +57,10 @@ public interface ConfirmationService extends IService<Confirmation> {
     /**
      * 更新用户活动后的服务时长和积分
      */
-    public Boolean updateUserHoursPoint(Confirmation confirmation);
+    public Boolean updateUserHoursPoint(Long confirmationId);
+
+    /**
+     * 批量更新积分时长
+     */
+    public Boolean updateUserHoursPointByIds(Long[] confirmationIds);
 }

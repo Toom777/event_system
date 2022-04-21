@@ -5,10 +5,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.toom.event_system.Common.Result;
 import com.toom.event_system.Entity.Activity;
 import com.toom.event_system.Entity.Confirmation;
+import com.toom.event_system.Entity.News;
 import com.toom.event_system.Entity.User;
 import com.toom.event_system.Entity.Vo.ConfirmActivityUserVo;
 import com.toom.event_system.Mapper.ActivityMapper;
 import com.toom.event_system.Mapper.ConfirmationMapper;
+import com.toom.event_system.Mapper.NewsMapper;
 import com.toom.event_system.Service.ConfirmationService;
 import com.toom.event_system.Service.MenuService;
 import com.toom.event_system.Service.RoleService;
@@ -37,6 +39,8 @@ class EventSystemApplicationTests {
 	@Autowired
 	private RoleService roleService;
 
+	@Autowired
+	private NewsMapper newsMapper;
 
 	@Autowired
 	private UserService userService;
@@ -115,4 +119,11 @@ class EventSystemApplicationTests {
 		}
 	}
 
+	@Test
+	void carouselTest() {
+		QueryWrapper<News> wrapper = new QueryWrapper<>();
+		wrapper.ne("remark", "");
+		System.out.println(newsMapper.selectList(wrapper));
+
+	}
 }

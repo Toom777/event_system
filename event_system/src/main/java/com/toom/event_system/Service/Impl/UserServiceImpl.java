@@ -86,6 +86,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         } else {
             user.setSating(5L);
         }
+        userMapper.updateById(user);
         System.out.println(user.getHours());
         System.out.println(user.getSating());
         return user;

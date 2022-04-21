@@ -106,4 +106,52 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements Ne
         }
         return typeList;
     }
+
+
+    /**
+     * 选作轮播图
+     * @param newsIds
+     * @return
+     */
+    @Override
+    public Boolean carouselNewsByIds(Long[] newsIds) {
+        int row = 0;
+        for (long id : newsIds) {
+            News news = newsMapper.selectById(id);
+            news.setRemark("carousel");
+            if (newsMapper.updateById(news) > 0) {
+                row++;
+            }
+        }
+        return row > 0 ? true : false;
+    }
+
+    /**
+     * 查找被选为轮播图的资讯
+     * @return
+     */
+    @Override
+    public List<News> selectCarouselList() {
+        QueryWrapper<News> wrapper = new QueryWrapper<>();
+        wrapper.ne("remark", "");
+        return newsMapper.selectList(wrapper);
+    }
+
+    /**
+     * 剔除轮播图资格
+     * @param newsIds
+     * @return
+     */
+    @Override
+    public Boolean deleteCarouselByIds(Long[] newsIds) {
+        int row = 0;
+        for (long id : newsIds) {
+            News news = newsMapper.selectById(id);
+            news.setRemark("");
+            if (newsMapper.updateById(news) > 0){
+                row++;
+            }
+        }
+        return row > 0 ? true :false;
+    }
 }

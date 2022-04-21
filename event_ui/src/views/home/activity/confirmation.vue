@@ -181,7 +181,14 @@
 </template>
 
 <script>
-import { listConfirmation, getConfirmation, delConfirmation, addConfirmation, updateConfirmation } from "@/api/confirmation";
+import {
+  listConfirmation,
+  getConfirmation,
+  delConfirmation,
+  addConfirmation,
+  updateConfirmation,
+  SettlementActivity
+} from "@/api/confirmation";
 import {getUser} from "@/api/user";
 export default {
   name: "confirmation",
@@ -349,8 +356,21 @@ export default {
       });
     },
     /** 活动结束确认按钮操作 */
-    handleAdd() {
-      this.reset();
+    handleAdd(row) {
+     const confirmationIds = row.confirmationId || this.ids;
+     this.$confirm('是否确定结算活动？', '提示', {
+       confirmButtonText: '确定',
+       cancelButtonText: '取消',
+       type: 'warning'
+     }).then(() => {
+       return SettlementActivity(confirmationIds);
+     }).then(() => {
+       this.getList();
+       this.$message({
+         message: '确认完毕！',
+         type: 'success'
+       });
+     }).catch(() => {});
 
     },
     /** 修改按钮操作 */

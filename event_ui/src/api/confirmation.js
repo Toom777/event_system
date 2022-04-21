@@ -80,3 +80,11 @@ export function checkActivity(query) {
     params: query
   })
 }
+
+//活动结算
+export function SettlementActivity(confirmationId) {
+  return axios({
+    url: '/confirmation/score/' + confirmationId,
+    method: 'get'
+  })
+}

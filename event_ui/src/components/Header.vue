@@ -4,12 +4,11 @@
         <!--<el-button plain icon="el-icon-menu" size="mini"></el-button>
         <h3 style="color: #ffffff">首页</h3>-->
 
-        <!--面包屑-->
 <!--        <el-breadcrumb separator="/" >
-          <el-breadcrumb-item v-for="item in tags" :key="item.path" :to="{ path: item.path }">{{item.label}}</el-breadcrumb-item>
+          <el-breadcrumb-item class="myColor" v-for="item in tags" :key="item.path" :to="{ path: item.path }">{{item.label}}</el-breadcrumb-item>
         </el-breadcrumb>-->
-        <el-breadcrumb separator="/">
-          <el-breadcrumb-item class="myColor" :to="{ path: '/home' }">首页</el-breadcrumb-item>
+        <el-breadcrumb separator="/" >
+          <el-breadcrumb-item @click.native="saveActive" class="myColor" :to="{ path: '/home' }">首页</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <div class="r-content">
@@ -35,7 +34,7 @@ export default {
   data() {
     return {
       name: '',
-      userImg: require('../assets/images/user.jpg')
+      userImg: require('../assets/images/user.jpg'),
     }
   },
   methods: {
@@ -67,7 +66,10 @@ export default {
         }
       })
     },
-
+    saveActive() {
+      console.log("打印打印")
+      localStorage.setItem("active", "home");
+    },
     /*退出登录*/
     logout(){
       this.$confirm('确认退出?', '提示', {

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.toom.event_system.Common.Result;
 import com.toom.event_system.Entity.News;
 import com.toom.event_system.Entity.PageInfo;
+import com.toom.event_system.Entity.User;
 import com.toom.event_system.Service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -87,6 +88,30 @@ public class NewsController extends BaseController{
     public Result updateNews(@RequestBody News news){
         news.setUpdateBy("admin");
         return toAjax(newsService.updateNews(news));
+    }
+
+    /**
+     * 轮播图列表
+     * @return
+     */
+    @RequestMapping("/carouselList")
+    public Result getCarouselList(){
+        return Result.success(newsService.selectCarouselList());
+    }
+
+    /**
+     * 选作轮播图
+     * @param newsIds
+     * @return
+     */
+    @RequestMapping("/addCarousel/{newsIds}")
+    public Result carouselNews(@PathVariable Long[] newsIds){
+        return toAjax(newsService.carouselNewsByIds(newsIds));
+    }
+
+    @RequestMapping("/delCarousel/{newsIds}")
+    public Result delCarousel(@PathVariable Long[] newsIds) {
+        return toAjax(newsService.deleteCarouselByIds(newsIds));
     }
 
     /**
